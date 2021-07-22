@@ -14,9 +14,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.logging;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of a logger with debug and error log levels.
@@ -28,13 +29,13 @@ public interface ILogger {
      *
      * @param message the message to be logged
      */
-    void d(@NonNull String message);
+    void debug(@NotNull String message);
 
     /**
      * Record a log message with level Logger.LogLevel.ERROR.
      *
      * @param message the message to be logged
      */
-    void e(@NonNull String message);
+    void error(@NotNull String message);
 
 }

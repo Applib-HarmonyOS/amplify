@@ -14,14 +14,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
-
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * PromptInteractionEventTest extends BaseTest
+ */
 public class PromptInteractionEventTest extends BaseTest {
 
     @Test

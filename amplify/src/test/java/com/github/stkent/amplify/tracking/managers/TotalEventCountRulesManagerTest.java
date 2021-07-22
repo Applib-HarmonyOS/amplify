@@ -14,23 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.mockito.Mock;
-
+import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 
+/**
+ * TotalEventCountRulesManagerTest extends BaseTest
+ */
 public class TotalEventCountRulesManagerTest extends BaseTest {
 
     private TotalEventCountRulesManager totalEventCountRulesManager;
@@ -54,14 +54,13 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
-        // Arrange
+
         final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
-        // Act
+
         totalEventCountRulesManager.notifyEventTriggered(mockEvent);
 
-        // Assert
         final Integer trackedTotalEventCount = fakeSettings.readTrackingValue(expectedTrackingKey);
 
         assertNotNull(
@@ -69,31 +68,28 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
                 trackedTotalEventCount);
     }
 
-    @SuppressLint("Assert")
+
     @Test
     public void testThatCorrectNumberOfEventsIsRecorded() {
-        // Arrange
+
         totalEventCountRulesManager.addEventBasedRule(mockEvent, mockRule);
 
         final Integer expectedEventCount = 7;
         assert expectedEventCount > 0;
 
-        // Act
         for (int i = 0; i < expectedEventCount; i++) {
             totalEventCountRulesManager.notifyEventTriggered(mockEvent);
         }
 
-        // Assert
+
         final Integer actualEventCount
                 = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
-        assertEquals(
-                "The correct number of events should have been recorded",
-                expectedEventCount,
+        assertEquals("The correct number of events should have been recorded", expectedEventCount,
                 actualEventCount);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NotNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_TOTAL_COUNT";
     }
 

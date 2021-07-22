@@ -14,10 +14,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.tracking.Amplify;
@@ -28,21 +26,20 @@ import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.rules.CooldownDaysRule;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * AppLevelEventRulesManager implements InterfaceAppLevelEventRulesManager.
+ */
 public final class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
 
-    private static final IEvent APP_CRASHED = new IEvent() {
-        @NonNull
-        @Override
-        public String getTrackingKey() {
-            return "APP_CRASHED";
-        }
-    };
+    private static final IEvent APP_CRASHED = () -> "APP_CRASHED";
 
-    @NonNull
+    @NotNull
     private final ISettings<Long> settings;
 
-    @NonNull
+    @NotNull
     private final IApp app;
 
     @Nullable
@@ -54,9 +51,15 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     @Nullable
     private IEventsManager<Long> lastAppCrashedTimeManager;
 
+    /**
+     * AppLevelEventRulesManager constructor.
+     *
+     * @param settings settings
+     * @param app app
+     */
     public AppLevelEventRulesManager(
-            @NonNull final ISettings<Long> settings,
-            @NonNull final IApp app) {
+            @NotNull final ISettings<Long> settings,
+            @NotNull final IApp app) {
 
         this.settings = settings;
         this.app = app;
@@ -69,11 +72,10 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
         if (installTimeRule != null) {
             final long installTime = app.getInstallTime();
 
-            //noinspection ConstantConditions
             boolean installResult = installTimeRule.shouldAllowFeedbackPrompt(installTime);
 
             if (!installResult) {
-                Amplify.getLogger().d("Blocking prompt based on install time");
+                Amplify.getLogger().debug("Blocking prompt based on install time");
             }
 
             result = installResult;
@@ -85,7 +87,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
             boolean lastUpdateResult = lastUpdateTimeRule.shouldAllowFeedbackPrompt(lastUpdateTime);
 
             if (!lastUpdateResult) {
-                Amplify.getLogger().d("Blocking prompt based on last update time");
+                Amplify.getLogger().debug("Blocking prompt based on last update time");
             }
 
             result = result && lastUpdateResult;
@@ -101,10 +103,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     @Override
     public void setInstallTimeCooldownDays(final int cooldownPeriodDays) {
         installTimeRule = new CooldownDaysRule(cooldownPeriodDays);
-
-        // This log message is morally correct, but technically misleading (we do not explicitly
-        // track an IEvent implementation called APP_INSTALLED).
-        Amplify.getLogger().d(
+        Amplify.getLogger().debug(
                 "Registered " + installTimeRule.getDescription() + " for event APP_INSTALLED");
     }
 
@@ -112,9 +111,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     public void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
         lastUpdateTimeRule = new CooldownDaysRule(cooldownPeriodDays);
 
-        // This log message is morally correct, but technically misleading (we do not explicitly
-        // track an IEvent implementation called APP_UPDATED).
-        Amplify.getLogger().d(
+        Amplify.getLogger().debug(
                 "Registered " + lastUpdateTimeRule.getDescription() + " for event APP_UPDATED");
     }
 

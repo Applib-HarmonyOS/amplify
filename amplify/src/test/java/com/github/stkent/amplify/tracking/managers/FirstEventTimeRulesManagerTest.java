@@ -14,25 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.mockito.Mock;
-
 import java.util.concurrent.TimeUnit;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+/**
+ * FirstEventTimeRulesManagerTest extends BaseTest
+ */
 public class FirstEventTimeRulesManagerTest extends BaseTest {
 
     private FirstEventTimeRulesManager firstEventTimeRulesManager;
@@ -89,7 +88,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
                 trackedEventTime);
     }
 
-    @SuppressLint("Assert")
+    //  @SuppressLint("Assert")
     @Test
     public void testThatOnlyFirstEventTimeIsRecorded() {
         // Arrange
@@ -111,7 +110,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
                 trackedEventTime);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NotNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_FIRST_TIME";
     }
 

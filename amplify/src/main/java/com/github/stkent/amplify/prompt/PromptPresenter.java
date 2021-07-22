@@ -14,66 +14,74 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-
+import ohos.rpc.RemoteException;
+import ohos.utils.PacMap;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.PromptInteractionEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * public final class PromptPresenter implements IPromptPresenter.
+ */
 public final class PromptPresenter implements IPromptPresenter {
 
     private static final String PROMPT_FLOW_STATE_KEY = "PromptFlowStateKey";
     private static final PromptFlowState DEFAULT_PROMPT_FLOW_STATE = PromptFlowState.INITIALIZED;
 
-    @NonNull
+    @NotNull
     private final IEventListener eventListener;
 
-    @NonNull
+    @NotNull
     private final IPromptView promptView;
 
-    @NonNull
+    @NotNull
     private PromptFlowState promptFlowState = DEFAULT_PROMPT_FLOW_STATE;
 
-    @NonNull
+    @NotNull
     private final List<IEventListener> extraEventListeners = new ArrayList<>();
 
+    /**
+     * PromptPresenter constructor.
+     *
+     * @param eventListener event listener.
+     * @param promptView prompt view.
+     */
     public PromptPresenter(
-            @NonNull final IEventListener eventListener,
-            @NonNull final IPromptView promptView) {
+            @NotNull final IEventListener eventListener,
+            @NotNull final IPromptView promptView) {
 
         this.eventListener = eventListener;
         this.promptView = promptView;
     }
 
     @Override
-    public void notifyEventTriggered(@NonNull final IEvent event) {
+    public void notifyEventTriggered(@NotNull final IEvent event) throws RemoteException {
         eventListener.notifyEventTriggered(event);
-
-        for (final IEventListener extraEventListener: extraEventListeners) {
+        for (final IEventListener extraEventListener : extraEventListeners) {
             extraEventListener.notifyEventTriggered(event);
         }
     }
 
     @Override
-    public void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
+    public void addPromptEventListener(@NotNull final IEventListener promptEventListener) {
         extraEventListeners.add(promptEventListener);
     }
 
     @Override
-    public void start() {
+    public void start() throws RemoteException {
         setToState(PromptFlowState.QUERYING_USER_OPINION);
     }
 
     @Override
-    public void reportUserOpinion(@NonNull final UserOpinion userOpinion) {
+    public void reportUserOpinion(@NotNull final UserOpinion userOpinion) throws RemoteException {
         if (userOpinion == UserOpinion.POSITIVE) {
             notifyEventTriggered(PromptInteractionEvent.USER_INDICATED_POSITIVE_OPINION);
             setToState(PromptFlowState.REQUESTING_POSITIVE_FEEDBACK);
@@ -84,7 +92,7 @@ public final class PromptPresenter implements IPromptPresenter {
     }
 
     @Override
-    public void reportUserFeedbackAction(@NonNull final UserFeedbackAction userFeedbackAction) {
+    public void reportUserFeedbackAction(@NotNull final UserFeedbackAction userFeedbackAction) throws RemoteException {
         if (promptFlowState != PromptFlowState.REQUESTING_POSITIVE_FEEDBACK
                 && promptFlowState != PromptFlowState.REQUESTING_CRITICAL_FEEDBACK) {
 
@@ -100,25 +108,23 @@ public final class PromptPresenter implements IPromptPresenter {
     }
 
     @Override
-    public void restoreStateFromBundle(@NonNull final Bundle bundle) {
-        final PromptFlowState promptFlowState =
+    public void restoreStateFromBundle(final PacMap pacMap) throws RemoteException {
+        final PromptFlowState promptFlowStatePacMap =
                 PromptFlowState.values()[
-                        bundle.getInt(
-                                PROMPT_FLOW_STATE_KEY,
+                        pacMap.getIntValue(PROMPT_FLOW_STATE_KEY,
                                 DEFAULT_PROMPT_FLOW_STATE.ordinal())];
 
-        setToState(promptFlowState, true);
+        setToState(promptFlowStatePacMap, true);
     }
 
-    @NonNull
     @Override
-    public Bundle generateStateBundle() {
-        final Bundle result = new Bundle();
-        result.putInt(PROMPT_FLOW_STATE_KEY, promptFlowState.ordinal());
+    public @NotNull PacMap generateStateBundle() {
+        final PacMap result = new PacMap();
+        result.putIntValue(PROMPT_FLOW_STATE_KEY, promptFlowState.ordinal());
         return result;
     }
 
-    private void handleUserAgreedToGiveFeedback() {
+    private void handleUserAgreedToGiveFeedback() throws RemoteException {
         notifyEventTriggered(PromptInteractionEvent.USER_GAVE_FEEDBACK);
 
         if (promptFlowState == PromptFlowState.REQUESTING_POSITIVE_FEEDBACK) {
@@ -134,7 +140,7 @@ public final class PromptPresenter implements IPromptPresenter {
         }
     }
 
-    private void handleUserDeclinedToGiveFeedback() {
+    private void handleUserDeclinedToGiveFeedback() throws RemoteException {
         notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_FEEDBACK);
 
         if (promptFlowState == PromptFlowState.REQUESTING_POSITIVE_FEEDBACK) {
@@ -146,13 +152,13 @@ public final class PromptPresenter implements IPromptPresenter {
         setToState(PromptFlowState.DISMISSED);
     }
 
-    private void setToState(@NonNull final PromptFlowState promptFlowState) {
+    private void setToState(@NotNull final PromptFlowState promptFlowState) throws RemoteException {
         setToState(promptFlowState, false);
     }
 
     private void setToState(
-            @NonNull final PromptFlowState promptFlowState,
-            final boolean triggeredByConfigChange) {
+            @NotNull final PromptFlowState promptFlowState,
+            final boolean triggeredByConfigChange) throws RemoteException {
 
         this.promptFlowState = promptFlowState;
 

@@ -14,23 +14,27 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt.interfaces;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * interface question.
+ */
 public interface IQuestion {
 
-    @NonNull
+    @NotNull
     String getTitle();
 
     @Nullable
     String getSubTitle();
 
-    @NonNull
+    @NotNull
     String getPositiveButtonLabel();
 
-    @NonNull
+    @NotNull
     String getNegativeButtonLabel();
 
 }

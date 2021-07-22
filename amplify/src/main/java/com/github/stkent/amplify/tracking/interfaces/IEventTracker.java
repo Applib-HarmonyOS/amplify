@@ -14,15 +14,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of a class that can track event occurrences over time.
  *
  * @param <T> the type of the value tracked by this tracker (Integer, Long or String)
  */
+
 public interface IEventTracker<T> {
 
     /**
@@ -32,14 +34,13 @@ public interface IEventTracker<T> {
      * @param rule the new rule to be registered, based on the corresponding IEvent
      */
     void addEventBasedRule(
-            @NonNull IEvent event,
-            @NonNull IEventBasedRule<T> rule);
+            @NotNull IEvent event,
+            @NotNull IEventBasedRule<T> rule);
 
     /**
      * Call this method to notify an implementing class that an event occurred.
      *
      * @param event the event that occurred
      */
-    void notifyEventTriggered(@NonNull IEvent event);
-
+    void notifyEventTriggered(@NotNull IEvent event);
 }

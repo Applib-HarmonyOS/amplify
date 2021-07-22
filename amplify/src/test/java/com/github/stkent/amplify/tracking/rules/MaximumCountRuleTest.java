@@ -14,21 +14,21 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.annotation.SuppressLint;
-
 import com.github.stkent.amplify.helpers.BaseTest;
-
 import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * MaximumCountRuleTest extends BaseTest
+ */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class MaximumCountRuleTest extends BaseTest {
 
-    @SuppressLint("Assert")
+    // @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
@@ -48,7 +48,7 @@ public class MaximumCountRuleTest extends BaseTest {
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
+    // @SuppressLint("Assert")
     @SuppressWarnings({"ConstantConditions", "UnnecessaryLocalVariable"})
     @Test
     public void testThatRuleBlocksPromptAtCountThreshold() {
@@ -68,7 +68,7 @@ public class MaximumCountRuleTest extends BaseTest {
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
+    // @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleBlocksPromptIfCountThresholdHasBeenExceeded() {
@@ -89,7 +89,7 @@ public class MaximumCountRuleTest extends BaseTest {
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
+    //@SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfCountThresholdHasNotBeenExceeded() {

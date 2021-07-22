@@ -14,55 +14,64 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import ohos.data.preferences.Preferences;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
+/**
+ * Settings implements InterfaceSettings.
+ */
 public final class Settings<T> implements ISettings<T> {
 
-    private final SharedPreferences sharedPreferences;
+    private final Preferences pref;
 
-    public Settings(@NonNull final SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+    public Settings(@NotNull final Preferences pref) {
+        this.pref = pref;
     }
 
-    public void writeTrackingValue(@NonNull final String trackingKey, final T value) {
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-
+    /**
+     * write tracking value.
+     *
+     * @param trackingKey tracking key
+     * @param value T value
+     */
+    public void writeTrackingValue(@NotNull final String trackingKey, final T value) {
         if (value.getClass().equals(String.class)) {
-            editor.putString(trackingKey, (String) value);
+            pref.putString(trackingKey, (String) value);
         } else if (value.getClass().equals(Boolean.class)) {
-            editor.putBoolean(trackingKey, (Boolean) value);
+            pref.putBoolean(trackingKey, (Boolean) value);
         } else if (value.getClass().equals(Long.class)) {
-            editor.putLong(trackingKey, (Long) value);
+            pref.putLong(trackingKey, (Long) value);
         } else if (value.getClass().equals(Integer.class)) {
-            editor.putInt(trackingKey, (Integer) value);
+            pref.putInt(trackingKey, (Integer) value);
         } else if (value.getClass().equals(Float.class)) {
-            editor.putLong(trackingKey, (Long) value);
+            pref.putFloat(trackingKey, (Float) value);
         } else {
             throw new IllegalArgumentException(
                     "Event value must be one of String, Boolean, Long, Integer or Float");
         }
-
-        editor.apply();
+        pref.flush();
     }
 
+    /**
+     * tracking key.
+     *
+     * @param trackingKey tracking key
+     */
     @Nullable
-    public T readTrackingValue(@NonNull final String trackingKey) {
-        final Map<String, ?> map = sharedPreferences.getAll();
+    public T readTrackingValue(@NotNull final String trackingKey) {
+        final Map<String, ?> map = pref.getAll();
 
         for (final Map.Entry<String, ?> entry : map.entrySet()) {
             if (entry.getKey().equals(trackingKey)) {
                 return (T) entry.getValue();
             }
         }
-
         return null;
     }
 

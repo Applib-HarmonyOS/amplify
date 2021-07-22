@@ -14,32 +14,35 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.managers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * TotalEventCountRulesManager extends BaseEventsManager.
+ */
 public final class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
 
-    public TotalEventCountRulesManager(@NonNull final ISettings<Integer> settings) {
+    public TotalEventCountRulesManager(@NotNull final ISettings<Integer> settings) {
         super(settings);
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected String getTrackedEventDimensionDescription() {
         return "Total count";
     }
 
-    @NonNull
+    @NotNull
     @Override
-    protected String getEventTrackingStatusStringSuffix(@NonNull final Integer cachedEventValue) {
+    protected String getEventTrackingStatusStringSuffix(@NotNull final Integer cachedEventValue) {
         return "has previously occurred " + cachedEventValue + " times";
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Integer getUpdatedTrackingValue(@Nullable final Integer cachedTrackingValue) {
         return cachedTrackingValue == null ? 1 : cachedTrackingValue + 1;

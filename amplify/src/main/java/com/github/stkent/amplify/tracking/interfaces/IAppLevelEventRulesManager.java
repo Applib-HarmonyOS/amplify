@@ -14,11 +14,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
 /**
  * An abstract representation of a class that manages application-level rules.
  */
+
 public interface IAppLevelEventRulesManager extends IRulesManager {
 
     /**

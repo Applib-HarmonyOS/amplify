@@ -14,21 +14,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.utils;
 
-import android.annotation.SuppressLint;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
+/**
+ * StringUtilsTest extends BaseTest
+ */
 @SuppressWarnings("ConstantConditions")
-@SuppressLint("Assert")
 public class StringUtilsTest extends BaseTest {
 
     private static final String DEFAULT_STRING = "any other string";
+    private static final String DEFAULT_IF_BLANK = "defaultIfBlank should have returned the default string";
 
     @Test
     public void testThatDefaultIfBlankReturnsPrimaryStringIfItContainsAtLeastOneNonWhitespaceCharacter() {
@@ -41,7 +42,7 @@ public class StringUtilsTest extends BaseTest {
 
         // Assert
         assertEquals(
-                "defaultIfBlank should have returned the primary string",
+                DEFAULT_IF_BLANK,
                 primaryString,
                 sanitizedString);
     }
@@ -57,7 +58,7 @@ public class StringUtilsTest extends BaseTest {
 
         // Assert
         assertEquals(
-                "defaultIfBlank should have returned the default string",
+                DEFAULT_IF_BLANK,
                 DEFAULT_STRING,
                 sanitizedString);
     }
@@ -73,7 +74,7 @@ public class StringUtilsTest extends BaseTest {
 
         // Assert
         assertEquals(
-                "defaultIfBlank should have returned the default string",
+                DEFAULT_IF_BLANK,
                 DEFAULT_STRING,
                 sanitizedString);
     }
@@ -89,7 +90,7 @@ public class StringUtilsTest extends BaseTest {
 
         // Assert
         assertEquals(
-                "defaultIfBlank should have returned the default string",
+                DEFAULT_IF_BLANK,
                 DEFAULT_STRING,
                 sanitizedString);
     }

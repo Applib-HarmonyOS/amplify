@@ -14,238 +14,246 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.annotation.SuppressLint;
-import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.support.annotation.StyleableRes;
+import ohos.agp.components.Attr;
+import ohos.agp.components.AttrSet;
+import ohos.agp.utils.Color;
+import ohos.utils.Parcel;
+import ohos.utils.Sequenceable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import java.util.Optional;
 
-import com.github.stkent.amplify.R;
+/**
+ * DefaultLayoutPromptViewConfig implements Sequenceable.
+ */
 
-//@formatter:off
 @SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
-public final class DefaultLayoutPromptViewConfig implements Parcelable {
+public final class DefaultLayoutPromptViewConfig implements Sequenceable {
 
-    @ColorInt
-    private static final int DEFAULT_FOREGROUND_COLOR = 0xFFFFFFFF;
+    private static final Color DEFAULT_FOREGROUND_COLOR = Color.WHITE;
+    private static final Color DEFAULT_BACKGROUND_COLOR = Color.BLUE;
+    
 
-    @ColorInt
-    private static final int DEFAULT_BACKGROUND_COLOR = 0xFF3C5A96;
-
-    private static final int DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
-    private static final int DEFAULT_DIMENSION_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
-
-    /**
-     * @return <code>primaryColor</code> if it is non-null; <code>defaultColor</code> otherwise
-     */
-    @ColorInt
-    private static int defaultIfNull(@Nullable final Integer primaryColor, @ColorInt final int defaultColor) {
+    private static int defaultIfNull(@Nullable final Integer primaryColor, final int defaultColor) {
         return primaryColor != null ? primaryColor : defaultColor;
     }
 
-    /**
-     * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
-     */
+
+
     @Nullable
-    private static Integer suppliedColorOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
-        final int color = typedArray.getColor(index, DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED);
-        return color != DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED ? color : null;
+    private static Integer suppliedAttrOrNull(@NotNull AttrSet attrSet, final String index) {
+        Optional<Attr> optionalAttr = attrSet.getAttr(index);
+        if (optionalAttr.isPresent()) {
+            return optionalAttr.get().getIntegerValue();
+        } else {
+            return null;
+        }
     }
 
-    /**
-     * @return the dimension in px defined for the attribute at <code>index</code>, if defined; null otherwise
-     */
     @Nullable
-    @Px
-    private static Integer suppliedDimensionOrNull(
-            @NonNull final TypedArray typedArray,
-            @StyleableRes final int index) {
-
-        final int dimensionPixelSize = typedArray.getDimensionPixelSize(index, DEFAULT_DIMENSION_VALUE_IF_UNDEFINED);
-
-        //noinspection ResourceType
-        return dimensionPixelSize != DEFAULT_DIMENSION_VALUE_IF_UNDEFINED ? dimensionPixelSize : null;
+    private static Integer suppliedAttrOrNullColor(@NotNull AttrSet attrSet, final String index) {
+        Optional<Attr> optionalAttr = attrSet.getAttr(index);
+        if (optionalAttr.isPresent()) {
+            Color c = optionalAttr.get().getColorValue();
+            c.getValue();
+            return c.getValue();
+        } else {
+            return null;
+        }
     }
+
 
     @Nullable private final Integer foregroundColor;
     @Nullable private final Integer backgroundColor;
     @Nullable private final Integer titleTextColor;
     @Nullable private final Integer subtitleTextColor;
-    @Nullable private final Integer positiveButtonTextColor;
-    @Nullable private final Integer positiveButtonBackgroundColor;
-    @Nullable private final Integer positiveButtonBorderColor;
-    @Nullable private final Integer negativeButtonTextColor;
-    @Nullable private final Integer negativeButtonBackgroundColor;
-    @Nullable private final Integer negativeButtonBorderColor;
-    @Nullable private final Integer customTextSizePx;
-    @Nullable private final Integer customButtonBorderWidthPx;
-    @Nullable private final Integer customButtonCornerRadiusPx;
 
-    public DefaultLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
-        foregroundColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_foreground_color);
+    @Nullable private Integer positiveButtonTextColor;
+    @Nullable private Integer positiveButtonBackgroundColor;
+    @Nullable private Integer positiveButtonBorderColor;
 
-        backgroundColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_background_color);
+    @Nullable private Integer negativeButtonTextColor;
+    @Nullable private Integer negativeButtonBackgroundColor;
+    @Nullable private Integer negativeButtonBorderColor;
 
-        titleTextColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_title_text_color);
+    @Nullable private Integer customTextSizePx;
+    @Nullable private Integer customButtonBorderWidthPx;
+    @Nullable private Integer customButtonCornerRadiusPx;
 
-        subtitleTextColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_subtitle_text_color);
+    /**
+     * DefaultLayoutPromptViewConfig constructor.
+     *
+     * @param attrSet attr set.
+     */
+    public DefaultLayoutPromptViewConfig(@NotNull final AttrSet attrSet) {
+        foregroundColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_foreground_color");
 
-        positiveButtonTextColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_positive_button_text_color);
+        backgroundColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_background_color");
 
-        positiveButtonBackgroundColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_positive_button_background_color);
+        titleTextColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_title_text_color");
 
-        positiveButtonBorderColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_positive_button_border_color);
+        subtitleTextColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_subtitle_text_color");
 
-        negativeButtonTextColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_text_color);
+        positiveButtonTextColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_positive_button_text_color");
 
-        negativeButtonBackgroundColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_background_color);
+        positiveButtonBackgroundColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_positive_button_background_color");
 
-        negativeButtonBorderColor = suppliedColorOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_border_color);
+        positiveButtonBorderColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_positive_button_border_color");
 
-        customTextSizePx = suppliedDimensionOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_text_size);
+        negativeButtonTextColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_negative_button_text_color");
 
-        customButtonBorderWidthPx = suppliedDimensionOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_button_border_width);
+        negativeButtonBackgroundColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_negative_button_background_color");
 
-        customButtonCornerRadiusPx = suppliedDimensionOrNull(
-                typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_button_corner_radius);
+        negativeButtonBorderColor = suppliedAttrOrNullColor(
+                attrSet, "prompt_view_negative_button_border_color");
+
+        customTextSizePx = suppliedAttrOrNull(
+                attrSet, "prompt_view_text_size");
+
+        customButtonBorderWidthPx = suppliedAttrOrNull(
+                attrSet, "prompt_view_button_border_width");
+
+        customButtonCornerRadiusPx = suppliedAttrOrNull(
+                attrSet, "prompt_view_button_corner_radius");
     }
 
     protected DefaultLayoutPromptViewConfig(
             @Nullable final Integer foregroundColor,
             @Nullable final Integer backgroundColor,
             @Nullable final Integer titleTextColor,
-            @Nullable final Integer subtitleTextColor,
-            @Nullable final Integer positiveButtonTextColor,
-            @Nullable final Integer positiveButtonBackgroundColor,
-            @Nullable final Integer positiveButtonBorderColor,
-            @Nullable final Integer negativeButtonTextColor,
-            @Nullable final Integer negativeButtonBackgroundColor,
-            @Nullable final Integer negativeButtonBorderColor,
-            @Nullable final Integer customTextSizePx,
-            @Nullable final Integer customButtonBorderWidthPx,
-            @Nullable final Integer customButtonCornerRadiusPx) {
+            @Nullable final Integer subtitleTextColor) {
 
-        this.foregroundColor               = foregroundColor;
-        this.backgroundColor               = backgroundColor;
-        this.titleTextColor                = titleTextColor;
-        this.subtitleTextColor             = subtitleTextColor;
+        this.foregroundColor     = foregroundColor;
+        this.backgroundColor     = backgroundColor;
+        this.titleTextColor      = titleTextColor;
+        this.subtitleTextColor   = subtitleTextColor;
+    }
+
+    protected DefaultLayoutPromptViewConfig(
+            @Nullable final String foregroundColor,
+            @Nullable final String backgroundColor,
+            @Nullable final String titleTextColor,
+            @Nullable final String subtitleTextColor) {
+
+        this.foregroundColor     = Color.getIntColor(foregroundColor);
+        this.backgroundColor     = Color.getIntColor(backgroundColor);
+        this.titleTextColor      = Color.getIntColor(titleTextColor);
+        this.subtitleTextColor   = Color.getIntColor(subtitleTextColor);
+    }
+
+
+    protected void setPositiveButtonColor(@Nullable final Integer positiveButtonTextColor,
+                                          @Nullable final Integer positiveButtonBackgroundColor,
+                                          @Nullable final Integer positiveButtonBorderColor) {
         this.positiveButtonTextColor       = positiveButtonTextColor;
         this.positiveButtonBackgroundColor = positiveButtonBackgroundColor;
         this.positiveButtonBorderColor     = positiveButtonBorderColor;
+    }
+
+    protected void setNegativeButtonColor(@Nullable final Integer negativeButtonTextColor,
+                                          @Nullable final Integer negativeButtonBackgroundColor,
+                                          @Nullable final Integer negativeButtonBorderColor) {
         this.negativeButtonTextColor       = negativeButtonTextColor;
         this.negativeButtonBackgroundColor = negativeButtonBackgroundColor;
         this.negativeButtonBorderColor     = negativeButtonBorderColor;
-        this.customTextSizePx              = customTextSizePx;
-        this.customButtonBorderWidthPx     = customButtonBorderWidthPx;
-        this.customButtonCornerRadiusPx    = customButtonCornerRadiusPx;
     }
 
-    @ColorInt
-    public int getFillColor() {
-        return getBackgroundColor();
+    protected void setCustomSize(@Nullable final Integer customTextSizePx,
+                                 @Nullable final Integer customButtonBorderWidthPx,
+                                 @Nullable final Integer customButtonCornerRadiusPx) {
+        this.customTextSizePx = customTextSizePx;
+        this.customButtonBorderWidthPx = customButtonBorderWidthPx;
+        this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
     }
 
-    @ColorInt
-    public int getTitleTextColor() {
-        return defaultIfNull(titleTextColor, getForegroundColor());
+
+
+
+    public Color getFillColor() {
+        return  new Color(getBackgroundColor());
     }
 
-    @ColorInt
-    public int getSubtitleTextColor() {
-        return defaultIfNull(subtitleTextColor, getForegroundColor());
+    public Color getTitleTextColor() {
+        return new Color(defaultIfNull(titleTextColor, getForegroundColor()));
     }
 
-    @ColorInt
+    public Color getSubtitleTextColor() {
+        return new Color(defaultIfNull(subtitleTextColor, getForegroundColor()));
+    }
+
     public int getPositiveButtonTextColor() {
         return defaultIfNull(positiveButtonTextColor, getBackgroundColor());
     }
 
-    @ColorInt
     public int getPositiveButtonBackgroundColor() {
         return defaultIfNull(positiveButtonBackgroundColor, getForegroundColor());
     }
 
-    @ColorInt
     public int getPositiveButtonBorderColor() {
         return defaultIfNull(positiveButtonBorderColor, getForegroundColor());
     }
 
-    @ColorInt
     public int getNegativeButtonTextColor() {
-        return defaultIfNull(negativeButtonTextColor, getForegroundColor());
+        return defaultIfNull(negativeButtonTextColor, getBackgroundColor());
     }
 
-    @ColorInt
     public int getNegativeButtonBackgroundColor() {
-        return defaultIfNull(negativeButtonBackgroundColor, getBackgroundColor());
+        return defaultIfNull(negativeButtonBackgroundColor, getForegroundColor());
     }
 
-    @ColorInt
     public int getNegativeButtonBorderColor() {
         return defaultIfNull(negativeButtonBorderColor, getForegroundColor());
     }
 
     @Nullable
-    @Px
     public Integer getCustomTextSizePx() {
         return customTextSizePx;
     }
 
     @Nullable
-    @Px
     public Integer getCustomButtonBorderWidthPx() {
         return customButtonBorderWidthPx;
     }
 
     @Nullable
-    @Px
     public Integer getCustomButtonCornerRadiusPx() {
         return customButtonCornerRadiusPx;
     }
 
-    @ColorInt
     private int getForegroundColor() {
-        return defaultIfNull(foregroundColor, DEFAULT_FOREGROUND_COLOR);
+        return defaultIfNull(foregroundColor, DEFAULT_FOREGROUND_COLOR.getValue());
     }
 
-    @ColorInt
     private int getBackgroundColor() {
-        return defaultIfNull(backgroundColor, DEFAULT_BACKGROUND_COLOR);
+        return defaultIfNull(backgroundColor, DEFAULT_BACKGROUND_COLOR.getValue());
     }
 
-    public static final class Builder {
+    @Override
+    public boolean marshalling(Parcel parcel) {
+        return false;
+    }
 
+    @Override
+    public boolean unmarshalling(Parcel parcel) {
+        return false;
+    }
+
+    /**
+     * Builder class.
+     */
+    public static final class Builder {
         @Nullable private Integer foregroundColor;
         @Nullable private Integer backgroundColor;
         @Nullable private Integer titleTextColor;
@@ -260,145 +268,100 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         @Nullable private Integer customButtonBorderWidthPx;
         @Nullable private Integer customButtonCornerRadiusPx;
 
-        public Builder setForegroundColor(@ColorInt final int foregroundColor) {
+        public Builder setForegroundColor(final int foregroundColor) {
             this.foregroundColor = foregroundColor;
             return this;
         }
 
-        public Builder setBackgroundColor(@ColorInt final int backgroundColor) {
+        public Builder setBackgroundColor(final int backgroundColor) {
             this.backgroundColor = backgroundColor;
             return this;
         }
 
-        public Builder setTitleTextColor(@ColorInt final int titleTextColor) {
+        public Builder setTitleTextColor(final int titleTextColor) {
             this.titleTextColor = titleTextColor;
             return this;
         }
 
-        public Builder setSubtitleTextColor(@ColorInt final int subtitleTextColor) {
+        public Builder setSubtitleTextColor(final int subtitleTextColor) {
             this.subtitleTextColor = subtitleTextColor;
             return this;
         }
 
-        public Builder setPositiveButtonTextColor(@ColorInt final int positiveButtonTextColor) {
+        public Builder setPositiveButtonTextColor(final int positiveButtonTextColor) {
             this.positiveButtonTextColor = positiveButtonTextColor;
             return this;
         }
 
-        public Builder setPositiveButtonBackgroundColor(@ColorInt final int positiveButtonBackgroundColor) {
+        public Builder setPositiveButtonBackgroundColor(final int positiveButtonBackgroundColor) {
             this.positiveButtonBackgroundColor = positiveButtonBackgroundColor;
             return this;
         }
 
-        public Builder setPositiveButtonBorderColor(@ColorInt final int positiveButtonBorderColor) {
+        public Builder setPositiveButtonBorderColor(final int positiveButtonBorderColor) {
             this.positiveButtonBorderColor = positiveButtonBorderColor;
             return this;
         }
 
-        public Builder setNegativeButtonTextColor(@ColorInt final int negativeButtonTextColor) {
+        public Builder setNegativeButtonTextColor(final int negativeButtonTextColor) {
             this.negativeButtonTextColor = negativeButtonTextColor;
             return this;
         }
 
-        public Builder setNegativeButtonBackgroundColor(@ColorInt final int negativeButtonBackgroundColor) {
+        public Builder setNegativeButtonBackgroundColor(final int negativeButtonBackgroundColor) {
             this.negativeButtonBackgroundColor = negativeButtonBackgroundColor;
             return this;
         }
 
-        public Builder setNegativeButtonBorderColor(@ColorInt final int negativeButtonBorderColor) {
+        public Builder setNegativeButtonBorderColor(final int negativeButtonBorderColor) {
             this.negativeButtonBorderColor = negativeButtonBorderColor;
             return this;
         }
 
-        public Builder setCustomTextSizePx(@Px final int customTextSizePx) {
+        public Builder setCustomTextSizePx(final int customTextSizePx) {
             this.customTextSizePx = customTextSizePx;
             return this;
         }
 
-        public Builder setButtonBorderWidthPx(@Px final int customButtonBorderWidthPx) {
+        public Builder setButtonBorderWidthPx(final int customButtonBorderWidthPx) {
             this.customButtonBorderWidthPx = customButtonBorderWidthPx;
             return this;
         }
 
-        public Builder setButtonCornerRadiusPx(@Px final int customButtonCornerRadiusPx) {
+        public Builder setButtonCornerRadiusPx(final int customButtonCornerRadiusPx) {
             this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
             return this;
         }
 
+        /**
+         * DefaultLayoutPromptViewConfig build.
+         */
+
         public DefaultLayoutPromptViewConfig build() {
-            return new DefaultLayoutPromptViewConfig(
+            DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig = new DefaultLayoutPromptViewConfig(
                     foregroundColor,
                     backgroundColor,
                     titleTextColor,
-                    subtitleTextColor,
-                    positiveButtonTextColor,
-                    positiveButtonBackgroundColor,
-                    positiveButtonBorderColor,
-                    negativeButtonTextColor,
-                    negativeButtonBackgroundColor,
-                    negativeButtonBorderColor,
+                    subtitleTextColor);
+
+            defaultLayoutPromptViewConfig.setCustomSize(
                     customTextSizePx,
                     customButtonBorderWidthPx,
                     customButtonCornerRadiusPx);
+
+            defaultLayoutPromptViewConfig.setPositiveButtonColor(
+                    positiveButtonTextColor,
+                    positiveButtonBackgroundColor,
+                    positiveButtonBorderColor);
+
+            defaultLayoutPromptViewConfig.setNegativeButtonColor(
+                    negativeButtonTextColor,
+                    negativeButtonBackgroundColor,
+                    negativeButtonBorderColor);
+
+            return defaultLayoutPromptViewConfig;
         }
 
     }
-
-    // Parcelable
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeValue(foregroundColor);
-        dest.writeValue(backgroundColor);
-        dest.writeValue(titleTextColor);
-        dest.writeValue(subtitleTextColor);
-        dest.writeValue(positiveButtonTextColor);
-        dest.writeValue(positiveButtonBackgroundColor);
-        dest.writeValue(positiveButtonBorderColor);
-        dest.writeValue(negativeButtonTextColor);
-        dest.writeValue(negativeButtonBackgroundColor);
-        dest.writeValue(negativeButtonBorderColor);
-        dest.writeValue(customTextSizePx);
-        dest.writeValue(customButtonBorderWidthPx);
-        dest.writeValue(customButtonCornerRadiusPx);
-    }
-
-    @SuppressLint("ParcelClassLoader")
-    protected DefaultLayoutPromptViewConfig(@NonNull final Parcel in) {
-        foregroundColor = (Integer) in.readValue(null);
-        backgroundColor = (Integer) in.readValue(null);
-        titleTextColor = (Integer) in.readValue(null);
-        subtitleTextColor = (Integer) in.readValue(null);
-        positiveButtonTextColor = (Integer) in.readValue(null);
-        positiveButtonBackgroundColor = (Integer) in.readValue(null);
-        positiveButtonBorderColor = (Integer) in.readValue(null);
-        negativeButtonTextColor = (Integer) in.readValue(null);
-        negativeButtonBackgroundColor = (Integer) in.readValue(null);
-        negativeButtonBorderColor = (Integer) in.readValue(null);
-        customTextSizePx = (Integer) in.readValue(null);
-        customButtonBorderWidthPx = (Integer) in.readValue(null);
-        customButtonCornerRadiusPx = (Integer) in.readValue(null);
-    }
-
-    public static final Parcelable.Creator<DefaultLayoutPromptViewConfig> CREATOR
-            = new Parcelable.Creator<DefaultLayoutPromptViewConfig>() {
-
-        @Override
-        public DefaultLayoutPromptViewConfig createFromParcel(final Parcel in) {
-            return new DefaultLayoutPromptViewConfig(in);
-        }
-
-        @Override
-        public DefaultLayoutPromptViewConfig[] newArray(final int size) {
-            return new DefaultLayoutPromptViewConfig[size];
-        }
-
-    };
-
 }
-//@formatter:on
+

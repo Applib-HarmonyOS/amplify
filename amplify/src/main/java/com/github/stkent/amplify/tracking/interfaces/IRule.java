@@ -14,16 +14,19 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 interface IRule {
 
     /**
+     * getDescription.
+     *
      * @return a human-readable name for this rule type; primarily used for debugging
      */
-    @NonNull
+    @NotNull
     String getDescription();
 
 }

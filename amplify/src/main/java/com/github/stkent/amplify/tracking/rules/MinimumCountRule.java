@@ -14,16 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.support.annotation.NonNull;
-
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * MinimumCountRule implements InterfaceEventBasedRule.
+ */
 public final class MinimumCountRule implements IEventBasedRule<Integer> {
 
     private final int minimumCount;
 
+    /**
+     * MinimumCountRule set minimum count rule.
+     *
+     * @param minimumCount int min count.
+     */
     public MinimumCountRule(final int minimumCount) {
         if (minimumCount <= 0) {
             throw new IllegalStateException(
@@ -39,11 +47,11 @@ public final class MinimumCountRule implements IEventBasedRule<Integer> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+    public boolean shouldAllowFeedbackPrompt(@NotNull final Integer cachedEventValue) {
         return cachedEventValue >= minimumCount;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getDescription() {
         return "MinimumCountRule with minimum required count of " + minimumCount;

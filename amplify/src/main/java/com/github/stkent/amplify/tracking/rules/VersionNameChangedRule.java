@@ -14,28 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-
+import ohos.app.Context;
+import ohos.rpc.RemoteException;
 import com.github.stkent.amplify.App;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import org.jetbrains.annotations.NotNull;
 
-import static android.support.annotation.VisibleForTesting.PRIVATE;
-
+/**
+ * VersionNameChangedRule implements InterfaceEventBasedRule.
+ */
 public final class VersionNameChangedRule implements IEventBasedRule<String> {
 
-    @NonNull
+    @NotNull
     private final String appVersionName;
 
-    public VersionNameChangedRule(@NonNull final Context context) {
+    public VersionNameChangedRule(@NotNull final Context context) throws RemoteException {
         this(new App(context).getVersionName());
     }
 
-    @VisibleForTesting(otherwise = PRIVATE)
-    /* default */ VersionNameChangedRule(@NonNull final String appVersionName) {
+    public VersionNameChangedRule(@NotNull final String appVersionName) {
         this.appVersionName = appVersionName;
     }
 
@@ -45,11 +45,11 @@ public final class VersionNameChangedRule implements IEventBasedRule<String> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
+    public boolean shouldAllowFeedbackPrompt(@NotNull final String cachedEventValue) {
         return !cachedEventValue.equals(appVersionName);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getDescription() {
         return "VersionNameChangedRule with current app version name " + appVersionName;

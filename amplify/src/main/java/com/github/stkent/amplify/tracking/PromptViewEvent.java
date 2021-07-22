@@ -14,21 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
-import android.support.annotation.NonNull;
-
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
-
+import org.jetbrains.annotations.NotNull;
 import static com.github.stkent.amplify.utils.Constants.EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE;
 
+/**
+ * enum PromptViewEvent implements InterfaceEvent.
+ */
 public enum PromptViewEvent implements IEvent {
 
     PROMPT_SHOWN,
     THANKS_SHOWN,
     PROMPT_DISMISSED;
 
-    @NonNull
+    @NotNull
     @Override
     public String getTrackingKey() {
         switch (this) {
@@ -38,9 +40,10 @@ public enum PromptViewEvent implements IEvent {
                 return "THANKS_SHOWN";
             case PROMPT_DISMISSED:
                 return "PROMPT_DISMISSED";
+            default:
+                throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
         }
 
-        throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
     }
 
 }

@@ -14,8 +14,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.utils.time;
 
+/**
+ * interface system time provider.
+ */
 public interface ISystemTimeProvider {
 
     long currentTimeMillis();

@@ -14,14 +14,16 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
-import android.support.annotation.NonNull;
-
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
-
+import org.jetbrains.annotations.NotNull;
 import static com.github.stkent.amplify.utils.Constants.EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE;
 
+/**
+ * enum PromptInteractionEvent implements InterfaceEvent.
+ */
 @SuppressWarnings("PMD.StdCyclomaticComplexity")
 public enum PromptInteractionEvent implements IEvent {
 
@@ -34,7 +36,7 @@ public enum PromptInteractionEvent implements IEvent {
     USER_GAVE_FEEDBACK,
     USER_DECLINED_FEEDBACK;
 
-    @NonNull
+    @NotNull
     @Override
     public String getTrackingKey() {
         switch (this) {
@@ -54,9 +56,9 @@ public enum PromptInteractionEvent implements IEvent {
                 return "USER_GAVE_FEEDBACK";
             case USER_DECLINED_FEEDBACK:
                 return "USER_DECLINED_FEEDBACK";
+            default:
+                throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
         }
-
-        throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
     }
 
 }

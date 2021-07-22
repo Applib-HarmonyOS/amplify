@@ -14,36 +14,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.utils;
 
+/**
+ * Constants.
+ */
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class Constants {
 
-    /**
-     * Package name for the Amazon App Store.
-     */
-    public static final String AMAZON_APP_STORE_PACKAGE_NAME = "com.amazon.venezia";
+    public static final String HUAWEI_APP_GALLERY_PACKAGE_NAME = "com.huawei.appmarket";
 
-    /**
-     * Package name for Amazon Underground.
-     */
-    public static final String AMAZON_UNDERGROUND_PACKAGE_NAME = "com.amazon.mshop.android";
-
-    /**
-     * Package name for the Google Play Store. Value can be verified here:
-     * https://developers.google.com/android/reference/com/google/android/gms/common/GooglePlayServicesUtil.html#GOOGLE_PLAY_STORE_PACKAGE
-     */
-    public static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
-
-    /**
-     * Package name for Google's Package Installer. My guess is that apps installed using the
-     * <a href="https://developer.android.com/reference/android/content/pm/PackageInstaller.html">PackageInstaller</a>
-     * APIs will report as having been installed from this source. Since this installer package name result hides the
-     * originating app package name from us, a consuming application that *really* needs to know how an app was
-     * installed will need to fall back on inspecting the apps currently installed on the device and making an educated
-     * guess.
-     */
-    public static final String PACKAGE_INSTALLER_PACKAGE_NAME = "com.google.android.packageinstaller";
 
     public static final String EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE
             = "This switch statement should be exhaustive.";

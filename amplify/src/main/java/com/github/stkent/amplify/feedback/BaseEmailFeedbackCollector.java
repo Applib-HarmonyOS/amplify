@@ -14,78 +14,75 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.feedback;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-
+import ohos.aafwk.ability.Ability;
+import ohos.aafwk.content.Intent;
+import ohos.rpc.RemoteException;
+import ohos.utils.net.Uri;
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.tracking.Amplify;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
-import static android.content.Intent.ACTION_SENDTO;
-
+/**
+ * BaseEmailFeedbackCollector implements IFeedbackCollector.
+ */
 public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
 
-    @NonNull
+    @NotNull
     protected abstract String getSubjectLine(
-            @NonNull IApp app,
-            @NonNull IEnvironment environment,
-            @NonNull IDevice device);
+            @NotNull IApp app,
+            @NotNull IEnvironment environment,
+            @NotNull IDevice device);
 
-    @NonNull
+    @NotNull
     protected abstract String getBody(
-            @NonNull IApp app,
-            @NonNull IEnvironment environment,
-            @NonNull IDevice device);
+            @NotNull IApp app,
+            @NotNull IEnvironment environment,
+            @NotNull IDevice device);
 
-    @NonNull
+    @NotNull
     private final String[] recipients;
 
-    public BaseEmailFeedbackCollector(@NonNull final String... recipients) {
+    protected BaseEmailFeedbackCollector(@NotNull final String... recipients) {
         this.recipients = Arrays.copyOf(recipients, recipients.length);
     }
 
     @Override
     public boolean tryCollectingFeedback(
-            @NonNull final Activity currentActivity,
-            @NonNull final IApp app,
-            @NonNull final IEnvironment environment,
-            @NonNull final IDevice device) {
-
+            @NotNull final Ability currentAbility,
+            @NotNull final IApp app,
+            @NotNull final IEnvironment environment,
+            @NotNull final IDevice device) throws RemoteException {
         final Intent emailIntent = getEmailIntent(app, environment, device);
-
         if (!environment.canHandleIntent(emailIntent)) {
-            Amplify.getLogger().e("Unable to present email client chooser.");
+            Amplify.getLogger().error("Unable to present email client chooser.");
             return false;
         }
 
-        showFeedbackEmailChooser(currentActivity, emailIntent);
+        showFeedbackEmailChooser(currentAbility, emailIntent);
         return true;
     }
 
-    @NonNull
+    @NotNull
     private Intent getEmailIntent(
-            @NonNull final IApp app,
-            @NonNull final IEnvironment environment,
-            @NonNull final IDevice device) {
-
-        final Intent result = new Intent(ACTION_SENDTO);
-        result.setData(Uri.parse("mailto:"));
-        result.putExtra(Intent.EXTRA_EMAIL, recipients);
-        result.putExtra(Intent.EXTRA_SUBJECT, getSubjectLine(app, environment, device));
-        result.putExtra(Intent.EXTRA_TEXT, getBody(app, environment, device));
+            @NotNull final IApp app,
+            @NotNull final IEnvironment environment,
+            @NotNull final IDevice device) {
+        Intent result = new Intent();
+        Intent.parseUri(String.valueOf(Uri.parse("mailto:")));
+        result.setParam("Email", recipients);
+        result.setParam("Subject", getSubjectLine(app, environment, device));
+        result.setParam("Text", getBody(app, environment, device));
         return result;
     }
 
-    private void showFeedbackEmailChooser(@NonNull final Activity currentActivity, @NonNull final Intent emailIntent) {
-        currentActivity.startActivity(emailIntent);
-        currentActivity.overridePendingTransition(0, 0);
+    private void showFeedbackEmailChooser(@NotNull final Ability currentActivity, @NotNull final Intent emailIntent) {
+        currentActivity.startAbility(emailIntent);
     }
 
 }

@@ -14,15 +14,19 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-
+import ohos.aafwk.ability.Ability;
+import ohos.aafwk.ability.AbilityPackage;
+import ohos.app.Context;
+import ohos.app.ElementsCallback;
+import ohos.data.DatabaseHelper;
+import ohos.data.preferences.Preferences;
+import ohos.global.configuration.Configuration;
+import ohos.rpc.RemoteException;
+import org.jetbrains.annotations.NotNull;
+import java.util.Arrays;
 import com.github.stkent.amplify.App;
 import com.github.stkent.amplify.Device;
 import com.github.stkent.amplify.Environment;
@@ -46,20 +50,19 @@ import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionCodeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionNameRulesManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
-import com.github.stkent.amplify.tracking.rules.GooglePlayStoreRule;
+import com.github.stkent.amplify.tracking.rules.HuaweiAppGalleryRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
-import com.github.stkent.amplify.utils.ActivityReferenceManager;
+import com.github.stkent.amplify.utils.AbilityReferenceManager;
 import com.github.stkent.amplify.utils.Constants;
-
-import java.util.Arrays;
-
-import static android.content.Context.MODE_PRIVATE;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
+/**
+ * Amplify implements InterfaceEventListener.
+ */
 @SuppressWarnings({"PMD.ExcessiveParameterList", "PMD.CyclomaticComplexity", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
 
@@ -67,56 +70,58 @@ public final class Amplify implements IEventListener {
     private static final int DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS = 7;
     private static final int DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS = 7;
 
-    // Begin logging
-
     private static ILogger sharedLogger = new NoOpLogger();
 
     public static ILogger getLogger() {
         return sharedLogger;
     }
 
-    public static void setLogger(@NonNull final ILogger logger) {
+    public static void setLogger(@NotNull final ILogger logger) {
         sharedLogger = logger;
     }
 
-    // End logging
-    // Begin shared instance
 
-    @SuppressLint("StaticFieldLeak") // We're holding the application context; that's not a problem.
+    @SuppressWarnings("StaticFieldLeak") // We're holding the application context; that's not a problem.
     private static Amplify sharedInstance;
 
-    public static Amplify initSharedInstance(@NonNull final Application application) {
-        return initSharedInstance(application, Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME);
+    public static Amplify initSharedInstance(final AbilityPackage abilityPackage) {
+        return initSharedInstance(abilityPackage, Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME);
     }
 
+    /**
+     * Set the initSharedInstance.
+     *
+     * @param abilityPackage the ability package of the app.
+     *
+     * @param backingSharedPreferencesName sharedPreferences name.
+     */
+
     public static Amplify initSharedInstance(
-            @NonNull final Application application,
-            @NonNull final String backingSharedPreferencesName) {
+            @NotNull final AbilityPackage abilityPackage,
+            @NotNull final String backingSharedPreferencesName) {
 
         synchronized (Amplify.class) {
-            if (sharedInstance == null) {
-                sharedInstance = new Amplify(application, backingSharedPreferencesName);
-            }
+            sharedInstance = new Amplify(abilityPackage, backingSharedPreferencesName);
         }
 
         return sharedInstance;
     }
 
+    /**
+     * Set the initSharedInstance.
+     */
     public static Amplify getSharedInstance() {
+
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
                 throw new IllegalStateException("You must call initSharedInstance before calling getSharedInstance.");
             }
         }
-
         return sharedInstance;
     }
 
-    // End shared instance
-    // Begin instance fields
-
     private final Context applicationContext;
-    private final ActivityReferenceManager activityReferenceManager;
+    private final AbilityReferenceManager abilityReferenceManager;
     private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
     private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEventsManager<Long> firstEventTimeRulesManager;
@@ -132,41 +137,54 @@ public final class Amplify implements IEventListener {
     // End instance fields
     // Begin constructors
 
-    private Amplify(@NonNull final Application application, @NonNull final String sharedPrefsName) {
-        applicationContext = application;
+    private Amplify(@NotNull final AbilityPackage abilityPackage, @NotNull final String sharedPrefsName) {
+        applicationContext = abilityPackage;
+        abilityReferenceManager = new AbilityReferenceManager();
+        abilityPackage.registerCallbacks(abilityReferenceManager, new ElementsCallback() {
+            @Override
+            public void onMemoryLevel(int i) {
+                //Method intentionally left blank
+            }
 
-        activityReferenceManager = new ActivityReferenceManager();
-        application.registerActivityLifecycleCallbacks(activityReferenceManager);
+            @Override
+            public void onConfigurationUpdated(Configuration configuration) {
+                //Method intentionally left blank
+            }
+        });
 
-        final IEnvironment environment = new Environment(application);
+
+
+        final IEnvironment environment = new Environment(applicationContext.getAbilityPackageContext());
         environmentBasedRulesManager = new EnvironmentBasedRulesManager(environment);
+        final IApp app = new App(applicationContext);
 
-        final IApp app = new App(application);
-        final SharedPreferences sharedPrefs = application.getSharedPreferences(sharedPrefsName, MODE_PRIVATE);
-        appLevelEventRulesManager = new AppLevelEventRulesManager(new Settings<Long>(sharedPrefs), app);
-        firstEventTimeRulesManager = new FirstEventTimeRulesManager(new Settings<Long>(sharedPrefs));
-        lastEventTimeRulesManager = new LastEventTimeRulesManager(new Settings<Long>(sharedPrefs));
-        lastEventVersionNameRulesManager = new LastEventVersionNameRulesManager(new Settings<String>(sharedPrefs), app);
-        lastEventVersionCodeRulesManager = new LastEventVersionCodeRulesManager(new Settings<Integer>(sharedPrefs), app);
-        totalEventCountRulesManager = new TotalEventCountRulesManager(new Settings<Integer>(sharedPrefs));
+        DatabaseHelper databaseHelper = new DatabaseHelper(this.applicationContext);
+        Preferences prefs = databaseHelper.getPreferences(sharedPrefsName);
+        appLevelEventRulesManager = new AppLevelEventRulesManager(new Settings<>(prefs), app);
+        firstEventTimeRulesManager = new FirstEventTimeRulesManager(new Settings<>(prefs));
+        lastEventTimeRulesManager = new LastEventTimeRulesManager(new Settings<>(prefs));
+        lastEventVersionNameRulesManager = new LastEventVersionNameRulesManager(new Settings<>(prefs), app);
+        lastEventVersionCodeRulesManager = new LastEventVersionCodeRulesManager(new Settings<>(prefs), app);
+        totalEventCountRulesManager = new TotalEventCountRulesManager(new Settings<>(prefs));
     }
 
-    // End constructors
-    // Begin configuration methods
 
-    public Amplify setPositiveFeedbackCollectors(@NonNull final IFeedbackCollector... feedbackCollectors) {
+    public Amplify setPositiveFeedbackCollectors(@NotNull final IFeedbackCollector... feedbackCollectors) {
         positiveFeedbackCollectors = Arrays.copyOf(feedbackCollectors, feedbackCollectors.length);
         return this;
     }
 
-    public Amplify setCriticalFeedbackCollectors(@NonNull final IFeedbackCollector... feedbackCollectors) {
+    public Amplify setCriticalFeedbackCollectors(@NotNull final IFeedbackCollector... feedbackCollectors) {
         criticalFeedbackCollectors = Arrays.copyOf(feedbackCollectors, feedbackCollectors.length);
         return this;
     }
+    /**
+     * apply all the DefaultRules.
+     */
 
-    public Amplify applyAllDefaultRules() {
+    public Amplify applyAllDefaultRules() throws RemoteException {
         return this
-                .addEnvironmentBasedRule(new GooglePlayStoreRule())
+                .addEnvironmentBasedRule(new HuaweiAppGalleryRule())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
                 .addTotalEventCountRule(USER_GAVE_POSITIVE_FEEDBACK,
@@ -179,7 +197,7 @@ public final class Amplify implements IEventListener {
                         new VersionNameChangedRule(applicationContext));
     }
 
-    public Amplify addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
+    public Amplify addEnvironmentBasedRule(@NotNull final IEnvironmentBasedRule rule) {
         environmentBasedRulesManager.addEnvironmentBasedRule(rule);
         return this;
     }
@@ -200,41 +218,60 @@ public final class Amplify implements IEventListener {
     }
 
     public Amplify addTotalEventCountRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<Integer> rule) {
-
+            @NotNull final IEvent event,
+            @NotNull final IEventBasedRule<Integer> rule) {
         totalEventCountRulesManager.addEventBasedRule(event, rule);
         return this;
     }
 
+    /**
+     * addFirstEventTimeRule.
+     *
+     * @param event event.
+     *
+     * @param rule rule.
+     */
     public Amplify addFirstEventTimeRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<Long> rule) {
+            @NotNull final IEvent event,
+            @NotNull final IEventBasedRule<Long> rule) {
 
         firstEventTimeRulesManager.addEventBasedRule(event, rule);
         return this;
     }
 
+    /**
+     * addLastEventTimeRule.
+     *
+     * @param event event.
+     *
+     * @param rule rule.
+     */
     public Amplify addLastEventTimeRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<Long> rule) {
+            @NotNull final IEvent event,
+            @NotNull final IEventBasedRule<Long> rule) {
 
         lastEventTimeRulesManager.addEventBasedRule(event, rule);
         return this;
     }
 
+    /**
+     * addLastEventVersionCodeRule.
+     *
+     * @param event event.
+     *
+     * @param rule rule.
+     */
     public Amplify addLastEventVersionCodeRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<Integer> rule) {
+            @NotNull final IEvent event,
+            @NotNull final IEventBasedRule<Integer> rule) {
 
         lastEventVersionCodeRulesManager.addEventBasedRule(event, rule);
         return this;
     }
 
     public Amplify addLastEventVersionNameRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<String> rule) {
-
+            @NotNull final IEvent event,
+            @NotNull final IEventBasedRule<String> rule) {
         lastEventVersionNameRulesManager.addEventBasedRule(event, rule);
         return this;
     }
@@ -251,45 +288,32 @@ public final class Amplify implements IEventListener {
     // Begin update methods
 
     @Override
-    public void notifyEventTriggered(@NonNull final IEvent event) {
-        sharedLogger.d(event.getTrackingKey() + " event triggered");
+    public void notifyEventTriggered(@NotNull final IEvent event) throws RemoteException {
+        sharedLogger.debug(event.getTrackingKey() + " event triggered");
         totalEventCountRulesManager.notifyEventTriggered(event);
         firstEventTimeRulesManager.notifyEventTriggered(event);
         lastEventTimeRulesManager.notifyEventTriggered(event);
         lastEventVersionCodeRulesManager.notifyEventTriggered(event);
         lastEventVersionNameRulesManager.notifyEventTriggered(event);
-
         if (event == USER_GAVE_POSITIVE_FEEDBACK) {
-            final Activity activity = activityReferenceManager.getValidatedActivity();
-
-            if (activity == null) {
-                return;
-            }
-
+            final Ability ability = abilityReferenceManager.getValidatedAbility();
             for (final IFeedbackCollector positiveFeedbackCollector : positiveFeedbackCollectors) {
                 if (positiveFeedbackCollector.tryCollectingFeedback(
-                        activity,
+                        ability,
                         new App(applicationContext),
                         new Environment(applicationContext),
                         new Device(applicationContext))) {
-
                     return;
                 }
             }
         } else if (event == USER_GAVE_CRITICAL_FEEDBACK) {
-            final Activity activity = activityReferenceManager.getValidatedActivity();
-
-            if (activity == null) {
-                return;
-            }
-
+            final Ability ability = abilityReferenceManager.getValidatedAbility();
             for (final IFeedbackCollector criticalFeedbackCollector : criticalFeedbackCollectors) {
                 if (criticalFeedbackCollector.tryCollectingFeedback(
-                        activity,
+                        ability,
                         new App(applicationContext),
                         new Environment(applicationContext),
                         new Device(applicationContext))) {
-
                     return;
                 }
             }
@@ -299,28 +323,33 @@ public final class Amplify implements IEventListener {
     // End update methods
     // Begin query methods
 
-    public void promptIfReady(@NonNull final IPromptView promptView) {
+    /**
+     * to check if the prompt is ready.
+     *
+     * @param promptView promptView.
+     */
+    public void promptIfReady(@NotNull final IPromptView promptView) throws RemoteException {
         if (!isConfigured()) {
             throw new IllegalStateException("Must finish configuration before attempting to prompt.");
         }
-
         if (shouldPrompt()) {
             promptView.getPresenter().start();
         }
     }
 
+    /**
+     * to check if all the rules allow prompt to be shown.
+     */
     public boolean shouldPrompt() {
-        return alwaysShow | (
+        return alwaysShow || (
                   appLevelEventRulesManager.shouldAllowFeedbackPrompt()
-                & environmentBasedRulesManager.shouldAllowFeedbackPrompt()
-                & totalEventCountRulesManager.shouldAllowFeedbackPrompt()
-                & firstEventTimeRulesManager.shouldAllowFeedbackPrompt()
-                & lastEventTimeRulesManager.shouldAllowFeedbackPrompt()
-                & lastEventVersionCodeRulesManager.shouldAllowFeedbackPrompt()
-                & lastEventVersionNameRulesManager.shouldAllowFeedbackPrompt());
+                && environmentBasedRulesManager.shouldAllowFeedbackPrompt()
+                && totalEventCountRulesManager.shouldAllowFeedbackPrompt()
+                && firstEventTimeRulesManager.shouldAllowFeedbackPrompt()
+                && lastEventTimeRulesManager.shouldAllowFeedbackPrompt()
+                && lastEventVersionCodeRulesManager.shouldAllowFeedbackPrompt()
+                && lastEventVersionNameRulesManager.shouldAllowFeedbackPrompt());
     }
-
-    // End query methods
 
     private boolean isConfigured() {
         return positiveFeedbackCollectors != null && criticalFeedbackCollectors != null;

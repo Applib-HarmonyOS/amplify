@@ -14,30 +14,47 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.support.annotation.NonNull;
+import ohos.agp.colors.RgbColor;
+import ohos.agp.components.element.ShapeElement;
+import ohos.app.Context;
+import com.github.stkent.ResourceTable;
+import org.jetbrains.annotations.NotNull;
 
-import com.github.stkent.amplify.R;
+/**
+ * DefaultLayoutThanksView extends CustomLayoutThanksView.
+ */
 
-@SuppressLint("ViewConstructor")
+@SuppressWarnings("ViewConstructor")
 public final class DefaultLayoutThanksView extends CustomLayoutThanksView {
 
+    /**
+     * DefaultLayoutThanksView constructor.
+     * Pending : Set background not working
+     * setBackgroundColor(config.getFillColor());
+     *
+     * @param context context.
+     *
+     * @param config config.
+     */
     public DefaultLayoutThanksView(
             final Context context,
-            @NonNull final DefaultLayoutPromptViewConfig config) {
+            @NotNull final DefaultLayoutPromptViewConfig config) {
 
-        super(context, R.layout.default_thanks_view);
+        super(context, ResourceTable.Layout_default_thanks_view);
+        ShapeElement shapeElement = new ShapeElement();
+        shapeElement.setShape(ShapeElement.RECTANGLE);
+        shapeElement.setRgbColor(new RgbColor(RgbColor.fromArgbInt(config.getFillColor().getValue())));
+        setBackground(shapeElement);
+        getTitleText().setTextColor(config.getTitleTextColor());
 
-        setBackgroundColor(config.getFillColor());
-
-        getTitleTextView().setTextColor(config.getTitleTextColor());
-
-        if (getSubtitleTextView() != null) {
-            getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
+        if (getSubtitleText() != null) {
+            getSubtitleText().setTextColor(config.getSubtitleTextColor());
         }
     }
+
+
 
 }

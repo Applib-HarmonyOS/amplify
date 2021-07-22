@@ -14,11 +14,18 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt.interfaces;
 
+import ohos.rpc.RemoteException;
+
+/**
+ * interface question presenter.
+ */
 public interface IQuestionPresenter {
 
-    void userRespondedPositively();
-    void userRespondedNegatively();
+    void userRespondedPositively() throws RemoteException;
+
+    void userRespondedNegatively() throws RemoteException;
 
 }

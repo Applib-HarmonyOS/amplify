@@ -14,23 +14,15 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.animation.Animator;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-import android.util.SparseArray;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.components.AttrSet;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.StackLayout;
+import ohos.app.Context;
+import ohos.rpc.RemoteException;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
@@ -39,15 +31,16 @@ import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.PromptViewEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.AGREED;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.DECLINED;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.CRITICAL;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.POSITIVE;
 
 @SuppressWarnings({"PMD.TooManyMethods"})
-abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
-        extends FrameLayout implements IPromptView {
+abstract class BasePromptView<T extends Component & IQuestionView, U extends Component & IThanksView>
+        extends StackLayout implements IPromptView {
 
     protected static final String SUPER_STATE_KEY = "SUPER_STATE_KEY";
     private static final String THANKS_DISPLAY_TIME_EXPIRED_KEY = "THANKS_DISPLAY_TIME_EXPIRED_KEY";
@@ -57,7 +50,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     protected abstract boolean isConfigured();
 
-    @NonNull
+    @NotNull
     protected abstract T getQuestionView();
 
     @Nullable
@@ -66,12 +59,12 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private final IQuestionPresenter userOpinionQuestionPresenter =
             new IQuestionPresenter() {
                 @Override
-                public void userRespondedPositively() {
+                public void userRespondedPositively() throws RemoteException {
                     promptPresenter.reportUserOpinion(POSITIVE);
                 }
 
                 @Override
-                public void userRespondedNegatively() {
+                public void userRespondedNegatively() throws RemoteException {
                     promptPresenter.reportUserOpinion(CRITICAL);
                 }
             };
@@ -79,91 +72,45 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private final IQuestionPresenter feedbackQuestionPresenter =
             new IQuestionPresenter() {
                 @Override
-                public void userRespondedPositively() {
+                public void userRespondedPositively() throws RemoteException {
                     promptPresenter.reportUserFeedbackAction(AGREED);
                 }
 
                 @Override
-                public void userRespondedNegatively() {
+                public void userRespondedNegatively() throws RemoteException {
                     promptPresenter.reportUserFeedbackAction(DECLINED);
                 }
             };
-
-    private IPromptPresenter promptPresenter;
+    private final IPromptPresenter promptPresenter;
     private BasePromptViewConfig basePromptViewConfig;
     private T displayedQuestionView;
     private boolean thanksDisplayTimeExpired;
 
-    /* default */ BasePromptView(final Context context) {
+    BasePromptView(final Context context) {
         this(context, null);
     }
 
-    /* default */ BasePromptView(final Context context, @Nullable final AttributeSet attributeSet) {
+    BasePromptView(final Context context, @Nullable final AttrSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
-    /* default */ BasePromptView(final Context context, @Nullable final AttributeSet attributeSet, final int defStyleAttr) {
-        super(context, attributeSet, defStyleAttr);
-        setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        initializeBaseConfig(attributeSet);
-
-        if (!isInEditMode()) {
-            promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
-        }
+    BasePromptView(final Context context, @Nullable final AttrSet attrSet, final int defStyleAttr) {
+        super(context, attrSet, String.valueOf(defStyleAttr));
+        System.out.println("CHIRAG : BasePromptView constructor ");
+        setLayoutConfig(new ComponentContainer.LayoutConfig(
+                ComponentContainer.LayoutConfig.MATCH_PARENT, ComponentContainer.LayoutConfig.MATCH_CONTENT));
+        initializeBaseConfig(attrSet);
+        promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
     }
 
-    @CallSuper
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        final Parcelable superState = super.onSaveInstanceState();
-
-        final Bundle result = new Bundle();
-        result.putParcelable(SUPER_STATE_KEY, superState);
-        result.putParcelable(BASE_PROMPT_VIEW_CONFIG_KEY, basePromptViewConfig);
-        result.putBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY, thanksDisplayTimeExpired);
-        result.putBundle(PROMPT_PRESENTER_STATE_BUNDLE_KEY, promptPresenter.generateStateBundle());
-        return result;
-    }
-
-    @CallSuper
-    @Override
-    protected void onRestoreInstanceState(@Nullable final Parcelable state) {
-        final Bundle savedState = (Bundle) state;
-
-        if (savedState != null) {
-            final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
-            super.onRestoreInstanceState(superSavedState);
-
-            final BasePromptViewConfig config = savedState.getParcelable(BASE_PROMPT_VIEW_CONFIG_KEY);
-
-            if (config != null) {
-                basePromptViewConfig = config;
-            }
-
-            thanksDisplayTimeExpired = savedState.getBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY);
-        }
-    }
-
-    @Override
-    protected void dispatchSaveInstanceState(final SparseArray<Parcelable> container) {
-        super.dispatchFreezeSelfOnly(container);
-    }
-
-    @Override
-    protected void dispatchRestoreInstanceState(final SparseArray<Parcelable> container) {
-        super.dispatchThawSelfOnly(container);
-    }
-
-    @NonNull
+    @NotNull
     @Override
     public final IPromptPresenter getPresenter() {
         return promptPresenter;
     }
 
     @Override
-    public final void queryUserOpinion(final boolean triggeredByConfigChange) {
+    public final void queryUserOpinion(final boolean triggeredByConfigChange) throws RemoteException {
         if (!isConfigured()) {
             throw new IllegalStateException("PromptView is not fully configured.");
         }
@@ -175,6 +122,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(userOpinionQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
+
     }
 
     @Override
@@ -193,69 +141,25 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public final void thankUser(final boolean triggeredByConfigChange) {
+    public final void thankUser(final boolean triggeredByConfigChange) throws RemoteException {
         if (!triggeredByConfigChange) {
             promptPresenter.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
         }
-
         clearDisplayedQuestionViewReference();
-
         if (!thanksDisplayTimeExpired) {
             final U thanksView = getThanksView();
             thanksView.bind(basePromptViewConfig.getThanks());
-
             setDisplayedView(thanksView);
-
             final Long thanksDisplayTimeMs = basePromptViewConfig.getThanksDisplayTimeMs();
-
-            if (thanksDisplayTimeMs != null) {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        thanksDisplayTimeExpired = true;
-
-                        final int fadeDurationMs = getResources()
-                                .getInteger(android.R.integer.config_mediumAnimTime);
-
-                        thanksView
-                                .animate()
-                                .setDuration(fadeDurationMs)
-                                .alpha(0.0f)
-                                .setListener(new Animator.AnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(final Animator animation) {
-                                        // This method intentionally left blank
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(final Animator animation) {
-                                        hide();
-
-                                        promptPresenter.notifyEventTriggered(
-                                                PromptViewEvent.PROMPT_DISMISSED);
-                                    }
-
-                                    @Override
-                                    public void onAnimationCancel(final Animator animation) {
-                                        // This method intentionally left blank
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(final Animator animation) {
-                                        // This method intentionally left blank
-                                    }
-                                })
-                                .start();
-                    }
-                }, thanksDisplayTimeMs);
+            if (thanksDisplayTimeMs == null) {
+                hide();
             }
-        } else {
-            hide();
         }
+
     }
 
     @Override
-    public final void dismiss(final boolean triggeredByConfigChange) {
+    public final void dismiss(final boolean triggeredByConfigChange) throws RemoteException {
         if (!triggeredByConfigChange) {
             promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
         }
@@ -269,7 +173,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         return getThanksView() != null;
     }
 
-    public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
+    public final void applyBaseConfig(@NotNull final BasePromptViewConfig basePromptViewConfig) {
         if (isDisplayed()) {
             throw new IllegalStateException("Configuration cannot be changed after the prompt is first displayed.");
         }
@@ -277,50 +181,27 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         this.basePromptViewConfig = basePromptViewConfig;
     }
 
-    public final void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
+    public final void addPromptEventListener(@NotNull final IEventListener promptEventListener) {
         promptPresenter.addPromptEventListener(promptEventListener);
     }
 
-    /**
-     * This method must be called by subclasses at the end of their onRestoreInstanceState
-     * implementations. This is to allow all configuration to be restored before the prompt
-     * presenter triggers a change in state, and is required because config changes are not allowed
-     * after a BasePromptView subclass is displayed.
-     */
-    protected final void restorePresenterState(@Nullable final Parcelable state) {
-        final Bundle bundle = (Bundle) state;
-
-        if (bundle != null) {
-            final Bundle promptPresenterState = bundle.getBundle(PROMPT_PRESENTER_STATE_BUNDLE_KEY);
-
-            if (promptPresenterState != null) {
-                promptPresenter.restoreStateFromBundle(promptPresenterState);
-            }
-        }
-    }
 
     protected final boolean isDisplayed() {
         return getChildCount() > 0;
     }
 
-    /**
-     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
-     * documentation of that method for confirmation.
-     */
-    private void initializeBaseConfig(@Nullable final AttributeSet attributeSet) {
-        final TypedArray typedArray = getContext().getTheme()
-                .obtainStyledAttributes(attributeSet, R.styleable.BasePromptView, 0, 0);
-
-        basePromptViewConfig = new BasePromptViewConfig(typedArray);
-
-        typedArray.recycle();
+    private void initializeBaseConfig(@Nullable final AttrSet attrSet) {
+        if (attrSet != null) {
+            System.out.println("CHIRAG : BasePromptView initializeBaseConfig");
+            basePromptViewConfig = new BasePromptViewConfig(attrSet);
+        }
     }
 
-    private void setDisplayedView(@NonNull final View view) {
-        removeAllViews();
+    private void setDisplayedView(@NotNull final Component component) {
+        removeAllComponents();
+        addComponent(component, new LayoutConfig(ComponentContainer.LayoutConfig.MATCH_PARENT,
+                ComponentContainer.LayoutConfig.MATCH_CONTENT));
 
-        addView(view, new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         setVisibility(VISIBLE);
     }
@@ -338,8 +219,8 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     private void hide() {
-        removeAllViews();
-        setVisibility(GONE);
+        removeAllComponents();
+        setVisibility(HIDE);
     }
 
 }

@@ -14,96 +14,98 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.components.Component;
+import ohos.agp.components.StackLayout;
+import ohos.agp.components.Text;
+import ohos.agp.render.layoutboost.LayoutBoost;
+import ohos.app.Context;
+import ohos.rpc.RemoteException;
+import com.github.stkent.ResourceTable;
 import com.github.stkent.amplify.prompt.interfaces.IQuestion;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.utils.Constants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressLint("ViewConstructor")
-class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
-
+@SuppressWarnings("ViewConstructor")
+class CustomLayoutQuestionView extends StackLayout implements IQuestionView {
     private static final String QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE
             = "Question presenter must be set before buttons can be clicked.";
 
-    @NonNull
-    private final TextView titleTextView;
+    @NotNull
+    private final Text titleTextView;
 
     @Nullable
-    private final TextView subtitleTextView;
+    private final Text subtitleTextView;
 
-    @NonNull
-    private final View positiveButton;
+    @NotNull
+    private final Component positiveButton;
 
-    @NonNull
-    private final View negativeButton;
+    @NotNull
+    private final Component negativeButton;
 
     private IQuestionPresenter questionPresenter;
 
-    /* default */ CustomLayoutQuestionView(
-            final Context context,
-            @LayoutRes final int layoutRes) {
+    CustomLayoutQuestionView(final Context context, final int layoutRes) {
 
         super(context);
-        LayoutInflater.from(context).inflate(layoutRes, this, true);
-
-        final TextView titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
-        final View positiveButton = findViewById(R.id.amplify_positive_button);
-        final View negativeButton = findViewById(R.id.amplify_negative_button);
-
-        if (titleTextView == null || positiveButton == null || negativeButton == null) {
-            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
+        LayoutBoost.inflate(context, layoutRes, this, true);
+        final Text titleTextViewComp = (Text) findComponentById(ResourceTable.Id_amplify_title_text_view);
+        final Component positiveButtonComp =  findComponentById(ResourceTable.Id_amplify_positive_button);
+        final Component negativeButtonComp =  findComponentById(ResourceTable.Id_amplify_negative_button);
+        if (positiveButtonComp == null) {
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE + " positive ");
+        }
+        if (titleTextViewComp == null) {
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE + " titleText ");
+        }
+        if (negativeButtonComp == null) {
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE + " negative ");
         }
 
-        this.titleTextView = titleTextView;
-        this.subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
-        this.positiveButton = positiveButton;
-        this.negativeButton = negativeButton;
+        this.titleTextView = titleTextViewComp;
+        this.subtitleTextView = (Text) findComponentById(ResourceTable.Id_amplify_subtitle_text_view);
+        this.positiveButton = positiveButtonComp;
+        this.negativeButton = negativeButtonComp;
 
-        positiveButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (questionPresenter == null) {
-                    throw new IllegalStateException(
-                            QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE);
-                }
+        positiveButton.setClickedListener(component -> {
+            if (questionPresenter == null) {
+                throw new IllegalStateException(
+                        QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE);
+            }
 
+            try {
                 questionPresenter.userRespondedPositively();
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
+        negativeButton.setClickedListener(component -> {
+            if (questionPresenter == null) {
+                throw new IllegalStateException(
+                        QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE);
+            }
 
-        negativeButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (questionPresenter == null) {
-                    throw new IllegalStateException(
-                            QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE);
-                }
-
+            try {
                 questionPresenter.userRespondedNegatively();
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
+
     }
 
     @Override
-    public void setPresenter(@NonNull final IQuestionPresenter questionPresenter) {
+    public void setPresenter(@NotNull final IQuestionPresenter questionPresenter) {
         this.questionPresenter = questionPresenter;
     }
 
     @Override
-    public void bind(@NonNull final IQuestion question) {
+    public void bind(@NotNull final IQuestion question) {
         titleTextView.setText(question.getTitle());
 
         setQuoteButtonUnquoteText(positiveButton, question.getPositiveButtonLabel());
@@ -116,28 +118,28 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
                 subtitleTextView.setText(subtitle);
                 subtitleTextView.setVisibility(VISIBLE);
             } else {
-                subtitleTextView.setVisibility(GONE);
+                subtitleTextView.setVisibility(HIDE);
             }
         }
     }
 
-    @NonNull
-    protected TextView getTitleTextView() {
+    @NotNull
+    protected Text getTitleTextView() {
         return titleTextView;
     }
 
     @Nullable
-    protected TextView getSubtitleTextView() {
+    protected Text getSubtitleTextView() {
         return subtitleTextView;
     }
 
-    @NonNull
-    protected View getPositiveButton() {
+    @NotNull
+    protected Component getPositiveButton() {
         return positiveButton;
     }
 
-    @NonNull
-    protected View getNegativeButton() {
+    @NotNull
+    protected Component getNegativeButton() {
         return negativeButton;
     }
 
@@ -147,14 +149,16 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
      * will be left unchanged.
      *
      * @param quoteButtonUnquote the "button" whose text we wish to set
+     *
      * @param text the text we wish to apply
      */
-    private void setQuoteButtonUnquoteText(
-            @NonNull final View quoteButtonUnquote,
-            @NonNull final String text) {
 
-        if (quoteButtonUnquote instanceof TextView) {
-            ((TextView) quoteButtonUnquote).setText(text);
+    private void setQuoteButtonUnquoteText(
+            final @NotNull Component quoteButtonUnquote,
+            @NotNull final String text) {
+
+        if (quoteButtonUnquote instanceof Text) {
+            ((Text) quoteButtonUnquote).setText(text);
         }
     }
 

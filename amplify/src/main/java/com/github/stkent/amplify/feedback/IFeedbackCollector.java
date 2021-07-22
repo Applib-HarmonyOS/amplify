@@ -14,24 +14,26 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.feedback;
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
-
+import ohos.aafwk.ability.Ability;
+import ohos.rpc.RemoteException;
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * interface InterfaceFeedbackCollector.
+ */
 public interface IFeedbackCollector {
 
-    /**
-     * @return true to indicate that feedback collection has been started successfully; false otherwise.
-     */
     boolean tryCollectingFeedback(
-            @NonNull Activity currentActivity,
-            @NonNull IApp app,
-            @NonNull IEnvironment environment,
-            @NonNull IDevice device);
+            @NotNull Ability currentAbility,
+
+            @NotNull IApp app,
+            @NotNull IEnvironment environment,
+            @NotNull IDevice device) throws RemoteException;
 
 }

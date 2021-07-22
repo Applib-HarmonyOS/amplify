@@ -14,30 +14,30 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.github.stkent.amplify.prompt.interfaces.IThanks;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class Thanks implements IThanks {
 
-    @NonNull
+    @NotNull
     private final String title;
 
     @Nullable
     private final String subTitle;
 
     protected Thanks(
-            @NonNull  final String title,
+            @NotNull  final String title,
             @Nullable final String subTitle) {
 
         this.title = title;
         this.subTitle = subTitle;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getTitle() {
         return title;

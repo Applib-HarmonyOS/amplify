@@ -14,6 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
 /**
@@ -22,6 +23,6 @@ package com.github.stkent.amplify.tracking.interfaces;
  *
  * @param <T> the type of the values tracked by this manager (Integer, Long or String)
  */
-public interface IEventsManager<T> extends IEventTracker<T>, IRulesManager {
 
+public interface IEventsManager<T> extends IEventTracker<T>, IRulesManager {
 }

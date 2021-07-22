@@ -14,25 +14,33 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
-
+import org.jetbrains.annotations.NotNull;
 import static java.util.concurrent.TimeUnit.DAYS;
 
+/**
+ * CooldownDaysRule implements InterfaceEventBasedRule.
+ */
 public final class CooldownDaysRule implements IEventBasedRule<Long> {
 
     private final long cooldownPeriodDays;
+
+    /**
+     * set the cool down days limit.
+     *
+     * @param cooldownPeriodDays number of days.
+     */
 
     public CooldownDaysRule(final long cooldownPeriodDays) {
         if (cooldownPeriodDays <= 0) {
             throw new IllegalStateException(
                     "Cooldown days rule must be configured with a positive cooldown period");
         }
-
         this.cooldownPeriodDays = cooldownPeriodDays;
     }
 
@@ -42,11 +50,11 @@ public final class CooldownDaysRule implements IEventBasedRule<Long> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
+    public boolean shouldAllowFeedbackPrompt(@NotNull final Long cachedEventValue) {
         return (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= DAYS.toMillis(cooldownPeriodDays);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getDescription() {
         return "CooldownDaysRule with a cooldown period of "

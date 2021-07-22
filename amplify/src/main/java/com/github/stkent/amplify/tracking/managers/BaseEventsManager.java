@@ -14,23 +14,25 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * abstract class BaseEventsManager implements InterfaceEventsManager.
+ */
 public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
@@ -39,7 +41,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     private final ConcurrentHashMap<String, List<IEventBasedRule<T>>> internalMap;
 
-    @NonNull
+    @NotNull
     protected abstract String getTrackedEventDimensionDescription();
 
     /**
@@ -49,43 +51,38 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
      * @return a string representation of an associated event's tracking status, given the currently
      *         cached value for that event
      */
-    @NonNull
+    @NotNull
     protected abstract String getEventTrackingStatusStringSuffix(
-            @NonNull T cachedEventValue);
+            @NotNull T cachedEventValue);
 
-    /**
-     * @param cachedEventValue the existing cached value associated with the tracked event; null if
-     *                         the event has never occurred before
-     * @return a new value to replace the existing value in the cache
-     */
-    @NonNull
+
+    @NotNull
     protected abstract T getUpdatedTrackingValue(@Nullable T cachedEventValue);
 
-    protected BaseEventsManager(@NonNull final ISettings<T> settings) {
+    protected BaseEventsManager(@NotNull final ISettings<T> settings) {
         this.settings = settings;
         this.internalMap = new ConcurrentHashMap<>();
     }
 
     @Override
     public void addEventBasedRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<T> rule) {
+            @NotNull final IEvent event,
+            @NotNull final IEventBasedRule<T> rule) {
 
         final String eventTrackingKey = event.getTrackingKey();
 
         if (!isTrackingEvent(eventTrackingKey)) {
-            internalMap.put(eventTrackingKey, new ArrayList<IEventBasedRule<T>>());
+            internalMap.put(eventTrackingKey, new ArrayList<>());
         }
 
-        //noinspection ConstantConditions
         internalMap.get(eventTrackingKey).add(rule);
 
-        Amplify.getLogger().d(
+        Amplify.getLogger().debug(
                 "Registered " + rule.getDescription() + " for event " + eventTrackingKey);
     }
 
     @Override
-    public void notifyEventTriggered(@NonNull final IEvent event) {
+    public void notifyEventTriggered(@NotNull final IEvent event) {
         final String eventTrackingKey = event.getTrackingKey();
 
         if (isTrackingEvent(eventTrackingKey)) {
@@ -93,12 +90,12 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (cachedTrackingValue == null) {
-                Amplify.getLogger().d(
+                Amplify.getLogger().debug(
                         "Setting " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
                       + " of " + eventTrackingKey
                       + " event to " + updatedTrackingValue);
             } else if (!updatedTrackingValue.equals(cachedTrackingValue)) {
-                Amplify.getLogger().d(
+                Amplify.getLogger().debug(
                         "Updating " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
                       + " of " + eventTrackingKey
                       + " event from " + cachedTrackingValue
@@ -122,7 +119,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 final T cachedEventValue = getCachedTrackingValue(eventTrackingKey);
 
                 if (cachedEventValue != null) {
-                    Amplify.getLogger().d(
+                    Amplify.getLogger().debug(
                             eventTrackingKey
                           + " event "
                           + getEventTrackingStatusStringSuffix(cachedEventValue));
@@ -132,7 +129,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                         result = false;
                     }
                 } else {
-                    Amplify.getLogger().d(
+                    Amplify.getLogger().debug(
                             "No tracked value for "
                           + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
                           + " of "
@@ -150,21 +147,19 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
         return result;
     }
 
-    private boolean isTrackingEvent(@NonNull final String eventTrackingKey) {
+    private boolean isTrackingEvent(@NotNull final String eventTrackingKey) {
         return internalMap.containsKey(eventTrackingKey);
     }
 
-    private String getPersistenceTrackingKey(@NonNull final String eventTrackingKey) {
+    private String getPersistenceTrackingKey(@NotNull final String eventTrackingKey) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + eventTrackingKey
                 + "_"
                 + getTrackingKeySuffix().toUpperCase(Locale.US);
     }
 
-    /**
-     * @return a key that uniquely identifies this event tracker within the embedding application
-     */
-    @NonNull
+
+    @NotNull
     private String getTrackingKeySuffix() {
         return getTrackedEventDimensionDescription()
                 .trim()
@@ -173,15 +168,15 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     }
 
     @Nullable
-    private T getCachedTrackingValue(@NonNull final String eventTrackingKey) {
+    private T getCachedTrackingValue(@NotNull final String eventTrackingKey) {
         return settings.readTrackingValue(getPersistenceTrackingKey(eventTrackingKey));
     }
 
     private void logPromptBlockedMessage(
-            @NonNull final IEventBasedRule<T> rule,
-            @NonNull final String eventTrackingKey) {
+            @NotNull final IEventBasedRule<T> rule,
+            @NotNull final String eventTrackingKey) {
 
-        Amplify.getLogger().d(
+        Amplify.getLogger().debug(
                 "Blocking feedback because of " + rule.getDescription()
               + " associated with " + eventTrackingKey + " event");
     }

@@ -14,13 +14,18 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * interface question view.
+ */
 public interface IQuestionView {
 
-    void setPresenter(@NonNull IQuestionPresenter questionPresenter);
-    void bind(@NonNull IQuestion question);
+    void setPresenter(@NotNull IQuestionPresenter questionPresenter);
+
+    void bind(@NotNull IQuestion question);
 
 }

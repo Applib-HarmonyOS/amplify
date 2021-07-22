@@ -14,75 +14,54 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.os.Build;
-import android.support.annotation.NonNull;
-
+import ohos.aafwk.content.Intent;
+import ohos.app.Context;
+import ohos.bundle.AbilityInfo;
+import ohos.bundle.IBundleManager;
+import ohos.rpc.RemoteException;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
+import static com.github.stkent.amplify.utils.Constants.HUAWEI_APP_GALLERY_PACKAGE_NAME;
+import static ohos.bundle.IBundleManager.GET_BUNDLE_WITH_ABILITIES;
 
-import static android.content.pm.PackageManager.GET_ACTIVITIES;
-import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
-import static com.github.stkent.amplify.utils.Constants.AMAZON_APP_STORE_PACKAGE_NAME;
-import static com.github.stkent.amplify.utils.Constants.GOOGLE_PLAY_STORE_PACKAGE_NAME;
-
+/**
+ * Environment implements IEnvironment.
+ */
 public final class Environment implements IEnvironment {
+    @NotNull
+     private final Context appContext;
 
-    @NonNull
-    private final Context appContext;
-
-    public Environment(@NonNull final Context context) {
-        this.appContext = context.getApplicationContext();
+    public Environment(@NotNull final Context context) {
+        this.appContext = context;
     }
 
-    @NonNull
-    @Override
-    public String getAndroidVersionName() {
-        return Build.VERSION.RELEASE;
-    }
-
-    @Override
-    public int getAndroidVersionCode() {
-        return Build.VERSION.SDK_INT;
-    }
 
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Override
-    public boolean isAppInstalled(@NonNull final String packageName) {
-        final PackageManager packageManager = appContext.getPackageManager();
+    public boolean isAppInstalled(@NotNull final String packageName) {
+        final IBundleManager iBundleManager = appContext.getBundleManager();
 
         try {
-            return packageManager.getPackageInfo(packageName, GET_ACTIVITIES) != null;
+            return iBundleManager.getBundleInfo(packageName, GET_BUNDLE_WITH_ABILITIES) != null;
         } catch (final Exception ignored) {
             return false;
         }
     }
 
     @Override
-    public boolean isAmazonAppStoreInstalled() {
-        return isAppInstalled(AMAZON_APP_STORE_PACKAGE_NAME);
+    public boolean isHuaweiAppGalleryInstalled() {
+
+        return isAppInstalled(HUAWEI_APP_GALLERY_PACKAGE_NAME);
     }
 
     @Override
-    public boolean isGooglePlayStoreInstalled() {
-        /*
-         * Note that we do not need to worry about differentiating between the Android Market and the Google Play Store
-         * because the Android Market is only available on phones running 3.0-3.2.
-         */
-        return isAppInstalled(GOOGLE_PLAY_STORE_PACKAGE_NAME);
-    }
-
-    @Override
-    public boolean canHandleIntent(@NonNull final Intent intent) {
-        final List<ResolveInfo> resolveInfoList = appContext
-                .getPackageManager()
-                .queryIntentActivities(intent, MATCH_DEFAULT_ONLY);
-
-        return !resolveInfoList.isEmpty();
+    public boolean canHandleIntent(@NotNull final Intent intent) throws RemoteException {
+        final List<AbilityInfo> abilityInfoList = appContext.getBundleManager().queryAbilityByIntent(intent,
+                IBundleManager.GET_BUNDLE_DEFAULT, 0);
+        return (abilityInfoList != null && !abilityInfoList.isEmpty());
     }
 
 }

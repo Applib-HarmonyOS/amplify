@@ -14,14 +14,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+import ohos.rpc.RemoteException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of a consuming class that is interested in receiving notifications
  * when trackable events occur.
  */
+
 public interface IEventListener {
 
     /**
@@ -29,6 +32,6 @@ public interface IEventListener {
      *
      * @param event the event that occurred
      */
-    void notifyEventTriggered(@NonNull IEvent event);
+    void notifyEventTriggered(@NotNull IEvent event) throws RemoteException;
 
 }

@@ -14,37 +14,41 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * LastEventVersionCodeRulesManager extends BaseEventsManager.
+ */
 public final class LastEventVersionCodeRulesManager extends BaseEventsManager<Integer> {
 
-    @NonNull
+    @NotNull
     private final IApp app;
 
-    public LastEventVersionCodeRulesManager(@NonNull final ISettings<Integer> settings, @NonNull final IApp app) {
+    public LastEventVersionCodeRulesManager(@NotNull final ISettings<Integer> settings,
+                                            @NotNull final IApp app) {
         super(settings);
         this.app = app;
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected String getTrackedEventDimensionDescription() {
         return "Last version code";
     }
 
-    @NonNull
+    @NotNull
     @Override
-    protected String getEventTrackingStatusStringSuffix(@NonNull final Integer cachedEventValue) {
+    protected String getEventTrackingStatusStringSuffix(@NotNull final Integer cachedEventValue) {
         return "last occurred for app version code " + cachedEventValue;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Integer getUpdatedTrackingValue(@Nullable final Integer cachedTrackingValue) {
         return app.getVersionCode();

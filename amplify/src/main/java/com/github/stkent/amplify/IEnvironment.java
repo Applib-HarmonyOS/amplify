@@ -14,17 +14,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import ohos.aafwk.content.Intent;
+import ohos.rpc.RemoteException;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Interface Environment.
+ */
 public interface IEnvironment {
-
-    @NonNull
-    String getAndroidVersionName();
-
-    int getAndroidVersionCode();
 
     /**
      * Call to check whether an application with a given package name is installed on this device.
@@ -32,22 +32,14 @@ public interface IEnvironment {
      * @param packageName the package name to look for
      * @return true if an application with the given package name is installed on the current device; false otherwise
      */
-    boolean isAppInstalled(@NonNull String packageName);
+    boolean isAppInstalled(@NotNull String packageName);
+
+    boolean canHandleIntent(@NotNull Intent intent) throws RemoteException;
 
     /**
-     * Call to check whether the Amazon App Store is installed on this device.
+     * Call to check whether the Huawei App Gallery is installed on this device.
      *
-     * @return true if the Amazon App Store is installed on the current device; false otherwise
+     * @return true if the Huawei App Gallery is installed on the current device; false otherwise
      */
-    boolean isAmazonAppStoreInstalled();
-
-    /**
-     * Call to check whether the Google Play Store is installed on this device.
-     *
-     * @return true if the Google Play Store is installed on the current device; false otherwise
-     */
-    boolean isGooglePlayStoreInstalled();
-
-    boolean canHandleIntent(@NonNull Intent intent);
-
+    boolean isHuaweiAppGalleryInstalled();
 }

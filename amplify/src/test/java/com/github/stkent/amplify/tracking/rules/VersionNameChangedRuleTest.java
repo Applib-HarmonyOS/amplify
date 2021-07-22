@@ -14,30 +14,33 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.annotation.SuppressLint;
-
 import com.github.stkent.amplify.helpers.BaseTest;
-
+import ohos.rpc.RemoteException;
 import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * VersionNameChangedRuleTest extends BaseTest
+ */
 public class VersionNameChangedRuleTest extends BaseTest {
+
+    static final String TESTSTRING = "any string";
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
-        // Arrange
-        final String fakeCurrentVersionName = "any string";
+    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() throws RemoteException {
+
+        final String fakeCurrentVersionName = TESTSTRING;
         final VersionNameChangedRule versionNameChangedRule = new VersionNameChangedRule(fakeCurrentVersionName);
 
-        // Act
+
         final boolean ruleShouldAllowFeedbackPrompt = versionNameChangedRule.shouldAllowFeedbackPromptByDefault();
 
-        // Assert
+
         assertTrue(
                 "Feedback prompt should be allowed if the associated event has never occurred.",
                 ruleShouldAllowFeedbackPrompt);
@@ -46,36 +49,35 @@ public class VersionNameChangedRuleTest extends BaseTest {
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Test
     public void testThatRuleBlocksPromptIfAppVersionNameHasNotChanged() {
-        // Arrange
-        final String fakeCachedVersionName = "any string";
+
+        final String fakeCachedVersionName = TESTSTRING;
         final String fakeCurrentVersionName = fakeCachedVersionName;
         final VersionNameChangedRule versionNameChangedRule = new VersionNameChangedRule(fakeCurrentVersionName);
 
-        // Act
+
         final boolean ruleShouldAllowFeedbackPrompt =
                 versionNameChangedRule.shouldAllowFeedbackPrompt(fakeCachedVersionName);
 
-        // Assert
+
         assertFalse(
                 "Feedback prompt should be blocked if the app version name has not changed",
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
     @Test
     public void testThatRuleAllowsPromptIfAppVersionNameHasChanged() {
-        // Arrange
-        final String fakeCachedVersionName = "any string";
+
+        final String fakeCachedVersionName = TESTSTRING;
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
         final VersionNameChangedRule versionNameChangedRule = new VersionNameChangedRule(fakeCurrentVersionName);
 
-        // Act
+
         final boolean ruleShouldAllowFeedbackPrompt =
                 versionNameChangedRule.shouldAllowFeedbackPrompt(fakeCachedVersionName);
 
-        // Assert
+
         assertTrue(
                 "Feedback prompt should be allowed if the app version name has changed",
                 ruleShouldAllowFeedbackPrompt);

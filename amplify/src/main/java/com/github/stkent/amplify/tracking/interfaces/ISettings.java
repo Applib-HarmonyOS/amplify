@@ -14,10 +14,11 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An abstract representation of a class capable of persisting values across application launches.
@@ -25,6 +26,7 @@ import android.support.annotation.Nullable;
  * @param <T> the type of the value that can be written and read by implementations (Integer, Long
  *        or String)
  */
+
 public interface ISettings<T> {
 
     /**
@@ -33,7 +35,7 @@ public interface ISettings<T> {
      * @param trackingKey the key with which to associate the new value
      * @param value the new value to be persisted
      */
-    void writeTrackingValue(@NonNull String trackingKey, T value);
+    void writeTrackingValue(@NotNull String trackingKey, T value);
 
     /**
      * Retrieve a value (if it exists) from persistent storage.
@@ -42,6 +44,6 @@ public interface ISettings<T> {
      * @return the persisted value, if it exists; null otherwise
      */
     @Nullable
-    T readTrackingValue(@NonNull String trackingKey);
+    T readTrackingValue(@NotNull String trackingKey);
 
 }

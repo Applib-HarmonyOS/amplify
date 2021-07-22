@@ -9,6 +9,7 @@
         ohos:height="match_content"
         ohos:width="match_parent"
         ohos:orientation="vertical">
+
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             ohos:id="$+id:default_layout_prompt_view_no_customization"
             ohos:width="match_parent"
@@ -21,14 +22,12 @@
             ohos:height="match_content"
             ohos:bottom_margin="5vp"/>
 
-
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             ohos:id="$+id:default_layout_prompt_view_xml_config"
             ohos:width="match_parent"
             ohos:height="match_content"
             ohos:bottom_margin="5vp"
             app:prompt_view_text_size="60"
-            app:prompt_view_button_border_width="5"
             app:prompt_view_button_corner_radius="30"
             app:prompt_view_subtitle_text_color="red"
             app:prompt_view_title_text_color = "red"
@@ -36,9 +35,7 @@
             app:prompt_view_foreground_color="#33FF00"
             app:prompt_view_positive_button_background_color="#FF9900"
             app:prompt_view_positive_button_text_color="#FFFFFF"
-            app:prompt_view_positive_button_border_color="#33FF00"
             app:prompt_view_negative_button_background_color="#FF9900"
-            app:prompt_view_negative_button_border_color="#33FF00"
             app:prompt_view_negative_button_text_color= "#FFFFFF"
             app:prompt_view_critical_feedback_question_negative_button_label="12. No"
             app:prompt_view_critical_feedback_question_positive_button_label="11. Yes"
@@ -57,35 +54,9 @@
             app:prompt_view_thanks_display_time_ms="20000"/>
 
         <com.github.stkent.amplify.prompt.CustomLayoutPromptView
-            ohos:id="$+id:custom_layout_prompt_view_xml_config"
-            ohos:width="match_parent"
-            ohos:height="match_content"
-            ohos:bottom_margin="16"
-            app:prompt_view_question_layout = "$layout:custom_question_view"
-            app:prompt_view_thanks_layout = "$layout:custom_thanks_view"
-            app:prompt_view_critical_feedback_question_negative_button_label="l. No"
-            app:prompt_view_critical_feedback_question_positive_button_label="k. Yes"
-            app:prompt_view_critical_feedback_question_subtitle="j. Critical Feedback Subtitle"
-            app:prompt_view_critical_feedback_question_title="i. Critical Feedback Title"
-            app:prompt_view_positive_feedback_question_negative_button_label="h. No"
-            app:prompt_view_positive_feedback_question_positive_button_label="g. Yes"
-            app:prompt_view_positive_feedback_question_subtitle="f. Positive Feedback Subtitle"
-            app:prompt_view_positive_feedback_question_title="e. Positive Feedback Title"
-            app:prompt_view_thanks_subtitle="n. Thanks Subtitle"
-            app:prompt_view_thanks_title="m. Thanks Title"
-            app:prompt_view_user_opinion_question_negative_button_label="d. No"
-            app:prompt_view_user_opinion_question_positive_button_label="c. Yes"
-            app:prompt_view_user_opinion_question_subtitle="b. Subtitle"
-            app:prompt_view_user_opinion_question_title="a. User Opinion Title"
-            app:prompt_view_thanks_display_time_ms="2000" />
-
-        <com.github.stkent.amplify.prompt.CustomLayoutPromptView
             ohos:id="$+id:custom_layout_prompt_view_code_config"
             ohos:width="match_parent"
             ohos:height="match_content"/>
-
-
-
 
     </DirectionalLayout>
 

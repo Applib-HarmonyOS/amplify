@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * public class BasePromptBuilder
+ * public class BasePromptBuilder.
  */
 public class BasePromptBuilder {
     @Nullable

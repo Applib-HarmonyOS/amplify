@@ -40,7 +40,7 @@ public final class HuaweiEmailFeedbackCollector implements IFeedbackCollector {
         try {
             startEmail(currentAbility);
             return true;
-        } catch ( final IllegalArgumentException | IllegalStateException illegalException) {
+        } catch (final IllegalArgumentException | IllegalStateException illegalException) {
             return false;
         }
     }

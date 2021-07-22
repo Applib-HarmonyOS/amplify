@@ -38,17 +38,6 @@ public class MainAbilitySlice extends AbilitySlice {
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
 
-        /*
-        try {
-            Amplify.getSharedInstance().promptIfReady(
-                    (CustomLayoutPromptView) findComponentById(
-                            ResourceTable.Id_custom_layout_prompt_view_xml_config));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-         */
-
-
         try {
             Amplify.getSharedInstance().promptIfReady(
                    (DefaultLayoutPromptView)
@@ -61,7 +50,8 @@ public class MainAbilitySlice extends AbilitySlice {
         final DefaultLayoutPromptView defaultLayoutPromptView = (DefaultLayoutPromptView)
                 findComponentById(ResourceTable.Id_default_layout_prompt_view_code_config);
         if (defaultLayoutPromptView == null) {
-            throw new IllegalStateException("default layout is null"); }
+            throw new IllegalStateException("default layout is null");
+        }
         final BasePromptViewConfig baseDefaultLayoutPromptViewConfig
                 = new BasePromptBuilder()
                 .setUserOpinionQuestionTitle("i. User Opinion Title")
@@ -85,15 +75,12 @@ public class MainAbilitySlice extends AbilitySlice {
                 .setForegroundColor(Color.getIntColor("#FF0000"))
                 .setBackgroundColor(Color.getIntColor("#FF9900"))
                 .setTitleTextColor(Color.getIntColor("#000000"))
-                .setSubtitleTextColor(Color.getIntColor("#000000"))
+                .setSubtitleTextColor(Color.getIntColor("#3300FF"))
                 .setPositiveButtonTextColor(Color.getIntColor("#FFFFFF"))
                 .setPositiveButtonBackgroundColor(Color.getIntColor("#3300FF"))
-                .setPositiveButtonBorderColor(Color.getIntColor("#0066FF"))
                 .setNegativeButtonTextColor(Color.getIntColor("#000000"))
                 .setNegativeButtonBackgroundColor(Color.getIntColor("#FF0000"))
-                .setNegativeButtonBorderColor(Color.getIntColor("#999999"))
                 .setCustomTextSizePx(50)
-                .setButtonBorderWidthPx(16)
                 .setButtonCornerRadiusPx(90)
                 .build();
         defaultLayoutPromptView.applyBaseConfig(baseDefaultLayoutPromptViewConfig);

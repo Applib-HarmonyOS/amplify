@@ -60,7 +60,6 @@ public final class DefaultLayoutPromptView
 
         super(context, attributeSet, defStyleAttr);
         init(attributeSet);
-        System.out.println("CHIRAG : defaultlayoutpromptview : attr " + attributeSet.getLength());
     }
 
     /**

@@ -87,7 +87,7 @@ and those with critical feedback are given choice to send a complaint email that
 ## Future Work
 1. Opening email client when user gives critical feedback with subject & device information in the text already filled, currently opening app gallery for both positive and critical feedback
 
-## Licence
+License
 Copyright 2015 Stuart Kent
 
 Licensed under the Apache License, Version 2.0 (the "License");

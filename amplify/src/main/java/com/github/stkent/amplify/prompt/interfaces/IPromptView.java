@@ -14,26 +14,36 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt.interfaces;
 
-import android.support.annotation.NonNull;
+import ohos.rpc.RemoteException;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * IPromptView.
+ */
 public interface IPromptView {
 
-    @NonNull
+    @NotNull
     IPromptPresenter getPresenter();
 
-    void queryUserOpinion(boolean triggeredByConfigChange);
+    void queryUserOpinion(boolean triggeredByConfigChange) throws RemoteException;
+
     void requestPositiveFeedback();
+
     void requestCriticalFeedback();
-    void dismiss(boolean triggeredByConfigChange);
+
+    void dismiss(boolean triggeredByConfigChange) throws RemoteException;
 
     boolean providesThanksView();
 
     /**
-     * <code>IPromptPresenter</code> instances should only call this method if
-     * <code>providesThanksView</code> returns <code>true</code>.
+     * IPromptPresenter instances should only call this method if
+     * providesThanksView returns true.
+     *
+     * @param triggeredByConfigChange trigggeredByConfigChange.
      */
-    void thankUser(boolean triggeredByConfigChange);
+    void thankUser(boolean triggeredByConfigChange) throws RemoteException;
 
 }

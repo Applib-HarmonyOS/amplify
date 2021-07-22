@@ -14,20 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of an event whose occurrences can be tracked across launches of the
  * embedding application.
  */
+
 public interface IEvent {
 
     /**
+     * getTrackingKey.
+     *
      * @return a key that uniquely identifies this event within the embedding application
      */
-    @NonNull
+    @NotNull
     String getTrackingKey();
 
 }

@@ -14,31 +14,31 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.helpers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An in-memory implementation of ISettings.
  */
+
 public class FakeSettings<T> implements ISettings<T> {
 
     private final Map<String, T> mostRecentValuesWritten = new ConcurrentHashMap<>();
 
     @Override
-    public void writeTrackingValue(@NonNull final String trackingKey, final T value) {
+    public void writeTrackingValue(@NotNull final String trackingKey, final T value) {
         mostRecentValuesWritten.put(trackingKey, value);
     }
 
     @Nullable
     @Override
-    public T readTrackingValue(@NonNull final String trackingKey) {
+    public T readTrackingValue(@NotNull final String trackingKey) {
         return mostRecentValuesWritten.get(trackingKey);
     }
 

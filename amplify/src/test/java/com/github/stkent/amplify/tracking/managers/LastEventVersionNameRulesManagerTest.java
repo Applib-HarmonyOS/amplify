@@ -14,26 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.managers;
 
-import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-
-import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
+import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.mockito.Mock;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+/**
+ * LastEventVersionNameRulesManagerTest extends BaseTest
+ */
 public class LastEventVersionNameRulesManagerTest extends BaseTest {
 
+
+    static final String ANY_STRING = "any string";
     private LastEventVersionNameRulesManager lastEventVersionNameRulesManager;
 
     private FakeSettings<String> fakeSettings;
@@ -60,7 +62,7 @@ public class LastEventVersionNameRulesManagerTest extends BaseTest {
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String fakeVersionName = "any string";
+        final String fakeVersionName = ANY_STRING;
 
         final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
@@ -76,11 +78,11 @@ public class LastEventVersionNameRulesManagerTest extends BaseTest {
                 trackedEventVersionName);
     }
 
-    @SuppressLint("Assert")
+    //@SuppressLint("Assert")
     @Test
     public void testThatFirstAppVersionNameIsRecorded() {
         // Arrange
-        final String fakeVersionName = "any string";
+        final String fakeVersionName = ANY_STRING;
 
         // Act
         triggerEventForAppVersionName(fakeVersionName);
@@ -95,11 +97,11 @@ public class LastEventVersionNameRulesManagerTest extends BaseTest {
                 trackedEventVersionName);
     }
 
-    @SuppressLint("Assert")
+    //@SuppressLint("Assert")
     @Test
     public void testThatMostRecentAppVersionNameIsRecorded() {
         // Arrange
-        final String fakeFirstVersionName = "any string";
+        final String fakeFirstVersionName = ANY_STRING;
         final String fakeSecondVersionName = "any other string";
         assert !fakeFirstVersionName.equals(fakeSecondVersionName);
 
@@ -117,11 +119,11 @@ public class LastEventVersionNameRulesManagerTest extends BaseTest {
                 trackedEventVersionName);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NotNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_LAST_VERSION_NAME";
     }
 
-    private void triggerEventForAppVersionName(@NonNull final String appVersionName) {
+    private void triggerEventForAppVersionName(@NotNull final String appVersionName) {
         when(mockApp.getVersionName()).thenReturn(appVersionName);
         lastEventVersionNameRulesManager.notifyEventTriggered(mockEvent);
     }

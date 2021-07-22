@@ -14,19 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.rules;
 
-import android.support.annotation.NonNull;
+package com.github.stkent.amplify.tracking.rules;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
-
+import org.jetbrains.annotations.NotNull;
 import static java.util.concurrent.TimeUnit.DAYS;
 
+
+
+/**
+ * WarmupDaysRule implements InterfaceEventBasedRule.
+ */
 public final class WarmupDaysRule implements IEventBasedRule<Long> {
 
     private final long warmupPeriodDays;
 
+    /**
+     * WarmupDaysRule constructor.
+     *
+     * @param warmupPeriodDays long set warm up period.
+     */
     public WarmupDaysRule(final long warmupPeriodDays) {
         if (warmupPeriodDays <= 0) {
             throw new IllegalStateException(
@@ -42,11 +51,11 @@ public final class WarmupDaysRule implements IEventBasedRule<Long> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
+    public boolean shouldAllowFeedbackPrompt(@NotNull final Long cachedEventValue) {
         return SystemTimeUtil.currentTimeMillis() - cachedEventValue > DAYS.toMillis(warmupPeriodDays);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getDescription() {
         return "WarmupDaysRule with a warmup period of "

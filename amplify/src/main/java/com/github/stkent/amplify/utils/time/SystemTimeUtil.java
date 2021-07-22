@@ -14,17 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.utils.time;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * SystemTimeUtil class.
+ */
 public final class SystemTimeUtil {
 
     @Nullable
     private static ISystemTimeProvider sharedInstance;
 
+    /**
+     * get currentTimeMillis .
+     */
     public static long currentTimeMillis() {
         synchronized (SystemTimeUtil.class) {
             if (sharedInstance == null) {
@@ -35,13 +41,11 @@ public final class SystemTimeUtil {
         return sharedInstance.currentTimeMillis();
     }
 
-    @VisibleForTesting
-    public static void setSharedInstance(@NonNull final ISystemTimeProvider systemTimeProvider) {
+    public static void setSharedInstance(@NotNull final ISystemTimeProvider systemTimeProvider) {
         sharedInstance = systemTimeProvider;
     }
 
     private SystemTimeUtil() {
-
     }
 
 }

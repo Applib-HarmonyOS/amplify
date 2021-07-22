@@ -14,22 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.logging;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * A no-op logger; used to suppress all library logging.
+ * class NoOpLogger implements InterfaceLogger.
  */
 public class NoOpLogger implements ILogger {
 
     @Override
-    public void d(@NonNull final String message) {
+    public void debug(@NotNull final String message) {
         // This method intentionally left blank.
     }
 
     @Override
-    public void e(@NonNull final String message) {
+    public void error(@NotNull final String message) {
         // This method intentionally left blank.
     }
 

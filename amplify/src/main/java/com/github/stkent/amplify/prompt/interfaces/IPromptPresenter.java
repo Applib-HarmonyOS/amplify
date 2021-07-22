@@ -14,25 +14,39 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt.interfaces;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 
+import ohos.rpc.RemoteException;
+import ohos.utils.PacMap;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * IPromptPresenter extends InterfaceEventListener.
+ */
 public interface IPromptPresenter extends IEventListener {
 
+    /**
+     * User opinion.
+     */
     enum UserOpinion {
         POSITIVE,
         CRITICAL
     }
 
+    /**
+     * enum UserFeedbackAction.
+     */
     enum UserFeedbackAction {
         AGREED,
         DECLINED
     }
 
+    /**
+     * enum PromptFlowState.
+     */
     enum PromptFlowState {
         INITIALIZED,
         QUERYING_USER_OPINION,
@@ -42,15 +56,17 @@ public interface IPromptPresenter extends IEventListener {
         DISMISSED
     }
 
-    void addPromptEventListener(@NonNull IEventListener promptEventListener);
+    void addPromptEventListener(@NotNull IEventListener promptEventListener);
 
-    void start();
-    void reportUserOpinion(@NonNull UserOpinion userOpinion);
-    void reportUserFeedbackAction(@NonNull UserFeedbackAction userFeedbackAction);
+    void start() throws RemoteException;
 
-    @NonNull
-    Bundle generateStateBundle();
+    void reportUserOpinion(@NotNull UserOpinion userOpinion) throws RemoteException;
 
-    void restoreStateFromBundle(@NonNull Bundle bundle);
+    void reportUserFeedbackAction(@NotNull UserFeedbackAction userFeedbackAction) throws RemoteException;
+
+    @NotNull
+    PacMap generateStateBundle();
+
+    void restoreStateFromBundle(PacMap pacMap) throws RemoteException;
 
 }

@@ -14,27 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-
+import ohos.app.Context;
+import ohos.rpc.RemoteException;
 import com.github.stkent.amplify.App;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import org.jetbrains.annotations.NotNull;
 
-import static android.support.annotation.VisibleForTesting.PRIVATE;
-
+/**
+ * VersionCodeChangedRule implements InterfaceEventBasedRule.
+ */
 public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
 
     private final int appVersionCode;
 
-    public VersionCodeChangedRule(@NonNull final Context context) {
+    public VersionCodeChangedRule(@NotNull final Context context) throws RemoteException {
         this(new App(context).getVersionCode());
     }
 
-    @VisibleForTesting(otherwise = PRIVATE)
-    /* default */ VersionCodeChangedRule(final int appVersionCode) {
+
+    public VersionCodeChangedRule(final int appVersionCode) {
         this.appVersionCode = appVersionCode;
     }
 
@@ -44,11 +45,11 @@ public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+    public boolean shouldAllowFeedbackPrompt(@NotNull final Integer cachedEventValue) {
         return cachedEventValue < appVersionCode;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getDescription() {
         return "VersionCodeChangedRule with current app version code " + appVersionCode;

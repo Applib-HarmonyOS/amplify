@@ -14,16 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.support.annotation.NonNull;
-
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * MaximumCountRule implements InterfaceEventBasedRule.
+ */
 public final class MaximumCountRule implements IEventBasedRule<Integer> {
 
     private final int maximumCount;
 
+    /**
+     * MaximumCountRule set maximum count rule.
+     *
+     * @param maximumCount int max count.
+     */
     public MaximumCountRule(final int maximumCount) {
         if (maximumCount <= 0) {
             throw new IllegalStateException(
@@ -39,11 +47,11 @@ public final class MaximumCountRule implements IEventBasedRule<Integer> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+    public boolean shouldAllowFeedbackPrompt(@NotNull final Integer cachedEventValue) {
         return cachedEventValue < maximumCount;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getDescription() {
         return "MaximumCountRule with maximum allowed count of " + maximumCount;

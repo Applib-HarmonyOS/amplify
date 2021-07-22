@@ -14,72 +14,66 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.components.StackLayout;
+import ohos.agp.components.Text;
+import ohos.agp.render.layoutboost.LayoutBoost;
+import ohos.app.Context;
+import com.github.stkent.ResourceTable;
 import com.github.stkent.amplify.prompt.interfaces.IThanks;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 import com.github.stkent.amplify.utils.Constants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressLint("ViewConstructor")
-class CustomLayoutThanksView extends FrameLayout implements IThanksView {
+@SuppressWarnings("ViewConstructor")
+class CustomLayoutThanksView extends StackLayout implements IThanksView {
 
-    @NonNull
-    private final TextView titleTextView;
+    @NotNull
+    private final Text titleText;
 
     @Nullable
-    private final TextView subtitleTextView;
+    private final Text subtitleText;
 
-    /* default */ CustomLayoutThanksView(
-            final Context context,
-            @LayoutRes final int layoutRes) {
-
+    CustomLayoutThanksView(final Context context, final int layoutRes) {
         super(context);
-        LayoutInflater.from(context).inflate(layoutRes, this, true);
+        LayoutBoost.inflate(context, layoutRes, this, true);
+        final Text titleTextcomponent = (Text) findComponentById(ResourceTable.Id_amplify_title_text_view);
 
-        final TextView titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
-
-        if (titleTextView == null) {
+        if (titleTextcomponent == null) {
             throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
         }
 
-        this.titleTextView = titleTextView;
-        subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
+        this.titleText = titleTextcomponent;
+        subtitleText = (Text) findComponentById(ResourceTable.Id_amplify_subtitle_text_view);
     }
 
     @Override
-    public void bind(@NonNull final IThanks thanks) {
-        titleTextView.setText(thanks.getTitle());
+    public void bind(@NotNull final IThanks thanks) {
+        titleText.setText(thanks.getTitle());
 
         final String subtitle = thanks.getSubTitle();
 
-        if (subtitleTextView != null) {
+        if (subtitleText != null) {
             if (subtitle != null) {
-                subtitleTextView.setText(subtitle);
-                subtitleTextView.setVisibility(VISIBLE);
+                subtitleText.setText(subtitle);
+                subtitleText.setVisibility(VISIBLE);
             } else {
-                subtitleTextView.setVisibility(GONE);
+                subtitleText.setVisibility(HIDE);
             }
         }
     }
 
-    @NonNull
-    protected TextView getTitleTextView() {
-        return titleTextView;
+    @NotNull
+    protected Text getTitleText() {
+        return titleText;
     }
 
     @Nullable
-    protected TextView getSubtitleTextView() {
-        return subtitleTextView;
+    protected Text getSubtitleText() {
+        return subtitleText;
     }
 
 }

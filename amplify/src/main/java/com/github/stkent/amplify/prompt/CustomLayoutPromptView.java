@@ -14,46 +14,74 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.components.AttrSet;
+import ohos.app.Context;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * CustomLayoutPromptView extends BasePromptView CustomLayoutQuestionView, CustomLayoutThanksView
+ *         implements IPromptView.
+ */
 public final class CustomLayoutPromptView
         extends BasePromptView<CustomLayoutQuestionView, CustomLayoutThanksView>
         implements IPromptView {
 
     private static final String CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY = "CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
 
-    // NonNull
+
     private CustomLayoutPromptViewConfig config;
 
+    /**
+     * CustomLayoutPromptView constructor.
+     *
+     * @param context context.
+     */
     public CustomLayoutPromptView(final Context context) {
         this(context, null);
     }
 
-    public CustomLayoutPromptView(final Context context, @Nullable final AttributeSet attributeSet) {
-        this(context, attributeSet, 0);
+    /**
+     * CustomLayoutPromptView constructor.
+     *
+     * @param context context.
+     * @param attrSet Attr set.
+     */
+    public CustomLayoutPromptView(final Context context, @Nullable final AttrSet attrSet) {
+        this(context, attrSet, 0);
+        System.out.println("CHIRAG : CustomLayoutPromptView constructor context and attrSet)");
+        System.out.println("CHIRAG : CustomLayoutPromptView attr length " + attrSet.getLength());
     }
 
+    /**
+     * CustomLayoutPromptView constructor.
+     *
+     * @param context context.
+     * @param attributeSet Attr set.
+     * @param defStyleAttr define style attribute.
+     *
+     */
     public CustomLayoutPromptView(
             final Context context,
-            @Nullable final AttributeSet attributeSet,
+            @Nullable final AttrSet attributeSet,
             final int defStyleAttr) {
 
         super(context, attributeSet, defStyleAttr);
         init(attributeSet);
+        System.out.println("CHIRAG : CustomLayoutPromptView constructor context and attrSet 2");
+        System.out.println("CHIRAG : CustomLayoutPromptView attr length " + attributeSet.getLength());
     }
 
-    public void applyConfig(@NonNull final CustomLayoutPromptViewConfig config) {
+    /**
+     * apply config.
+     *
+     * @param config CustomLayoutPromptViewConfig config.
+     */
+    public void applyConfig(@NotNull final CustomLayoutPromptViewConfig config) {
         if (isDisplayed()) {
             throw new IllegalStateException("Configuration cannot be changed after the prompt is first displayed.");
         }
@@ -61,41 +89,14 @@ public final class CustomLayoutPromptView
         this.config = config;
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        final Parcelable superState = super.onSaveInstanceState();
-
-        final Bundle result = new Bundle();
-        result.putParcelable(SUPER_STATE_KEY, superState);
-        result.putParcelable(CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY, config);
-        return result;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@Nullable final Parcelable state) {
-        final Bundle savedState = (Bundle) state;
-
-        if (savedState != null) {
-            final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
-            super.onRestoreInstanceState(superSavedState);
-
-            final CustomLayoutPromptViewConfig config
-                    = savedState.getParcelable(CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY);
-
-            if (config != null) {
-                this.config = config;
-            }
-
-            restorePresenterState(superSavedState);
-        }
-    }
 
     @Override
     protected boolean isConfigured() {
         return config.isValid();
     }
 
-    @NonNull
+    @NotNull
+
     @Override
     protected CustomLayoutQuestionView getQuestionView() {
         return new CustomLayoutQuestionView(getContext(), config.getQuestionLayout());
@@ -115,15 +116,14 @@ public final class CustomLayoutPromptView
      * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see documentation of
      * that method for confirmation.
      */
-    private void init(@Nullable final AttributeSet attributeSet) {
-        // NonNull
-        final TypedArray typedArray = getContext()
-                .getTheme()
-                .obtainStyledAttributes(attributeSet, R.styleable.CustomLayoutPromptView, 0, 0);
-
-        config = new CustomLayoutPromptViewConfig(typedArray);
-
-        typedArray.recycle();
+    private void init(@Nullable final AttrSet attrSet) {
+        System.out.println("CHIRAG :  CustomLayoutPromptView attr length : " + attrSet.getLength());
+        for(int j = 0; j < attrSet.getLength(); ++j){
+            System.out.println("CHIRAG attr : " + attrSet.getAttr(j).toString());
+        }
+        if (attrSet != null) {
+            config = new CustomLayoutPromptViewConfig(attrSet);
+        }
     }
 
 }

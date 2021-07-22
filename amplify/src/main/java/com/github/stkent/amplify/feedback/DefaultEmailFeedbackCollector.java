@@ -14,44 +14,42 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.feedback;
 
-import android.support.annotation.NonNull;
+package com.github.stkent.amplify.feedback;
 
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
-
+import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector.
+ */
 public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
-
-    public DefaultEmailFeedbackCollector(@NonNull final String... recipients) {
+    public DefaultEmailFeedbackCollector(@NotNull final String... recipients) {
         super(recipients);
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected String getSubjectLine(
-            @NonNull final IApp app,
-            @NonNull final IEnvironment environment,
-            @NonNull final IDevice device) {
+            @NotNull final IApp app,
+            @NotNull final IEnvironment environment,
+            @NotNull final IDevice device) {
 
         return app.getName() + " Android App Feedback";
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected String getBody(
-            @NonNull final IApp app,
-            @NonNull final IEnvironment environment,
-            @NonNull final IDevice device) {
-
-        final String androidVersionString = String.format(
-                "%s (%s)", environment.getAndroidVersionName(), environment.getAndroidVersionCode());
+            @NotNull final IApp app,
+            @NotNull final IEnvironment environment,
+            @NotNull final IDevice device) {
 
         final String appVersionString = String.format("%s (%s)", app.getVersionName(), app.getVersionCode());
 
@@ -59,7 +57,6 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
         return    "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date()) + "\n"
                 + "App Version: " + appVersionString + "\n"
                 + "Install Source: " + app.getInstallSource() + "\n"
-                + "Android Version: " + androidVersionString + "\n"
                 + "Device Manufacturer: " + device.getManufacturer() + "\n"
                 + "Device Model: " + device.getModel() + "\n"
                 + "Display Resolution: " + device.getResolution() + "\n"
@@ -69,7 +66,7 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
         // @formatter:on
     }
 
-    @NonNull
+    @NotNull
     private String getCurrentUtcTimeStringForDate(final Date date) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss z", Locale.getDefault());
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));

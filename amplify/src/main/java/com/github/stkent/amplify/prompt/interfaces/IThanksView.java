@@ -14,12 +14,16 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Interface thanks view.
+ */
 public interface IThanksView {
 
-    void bind(@NonNull IThanks thanks);
+    void bind(@NotNull IThanks thanks);
 
 }

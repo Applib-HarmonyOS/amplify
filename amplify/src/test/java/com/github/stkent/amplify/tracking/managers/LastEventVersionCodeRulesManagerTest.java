@@ -14,24 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.managers;
 
-import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-
-import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
+import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.mockito.Mock;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+/**
+ * LastEventVersionCodeRulesManagerTest extends BaseTest
+ */
 public class LastEventVersionCodeRulesManagerTest extends BaseTest {
 
     private LastEventVersionCodeRulesManager lastEventVersionCodeRulesManager;
@@ -59,16 +59,14 @@ public class LastEventVersionCodeRulesManagerTest extends BaseTest {
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
-        // Arrange
+
         final int fakeVersionCode = 17;
 
         final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
-        // Act
         triggerEventForAppVersionCode(fakeVersionCode);
 
-        // Assert
         final Integer trackedEventVersionCode = fakeSettings.readTrackingValue(expectedTrackingKey);
 
         assertNotNull(
@@ -77,16 +75,13 @@ public class LastEventVersionCodeRulesManagerTest extends BaseTest {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @SuppressLint("Assert")
     @Test
     public void testThatFirstAppVersionCodeIsRecorded() {
-        // Arrange
+
         final int fakeVersionCode = 17;
 
-        // Act
         triggerEventForAppVersionCode(fakeVersionCode);
 
-        // Assert
         final int trackedEventVersionCode
                 = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
@@ -97,19 +92,16 @@ public class LastEventVersionCodeRulesManagerTest extends BaseTest {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @SuppressLint("Assert")
     @Test
     public void testThatMostRecentAppVersionCodeIsRecorded() {
-        // Arrange
+
         final int fakeFirstVersionCode = 17;
         final int fakeSecondVersionCode = 20;
         assert fakeFirstVersionCode < fakeSecondVersionCode;
 
-        // Act
         triggerEventForAppVersionCode(fakeFirstVersionCode);
         triggerEventForAppVersionCode(fakeSecondVersionCode);
 
-        // Assert
         final int trackedEventVersionCode
                 = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
@@ -119,7 +111,7 @@ public class LastEventVersionCodeRulesManagerTest extends BaseTest {
                 trackedEventVersionCode);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NotNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_LAST_VERSION_CODE";
     }
 

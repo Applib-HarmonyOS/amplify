@@ -14,32 +14,34 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.support.annotation.NonNull;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * EnvironmentBasedRulesManager implements InterfaceEnvironmentBasedRulesManager.
+ */
 public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManager {
 
-    @NonNull
+    @NotNull
     private final IEnvironment environment;
 
-    @NonNull
+    @NotNull
     private final List<IEnvironmentBasedRule> environmentBasedRules = new ArrayList<>();
 
-    public EnvironmentBasedRulesManager(@NonNull final IEnvironment environment) {
+    public EnvironmentBasedRulesManager(@NotNull final IEnvironment environment) {
         this.environment = environment;
     }
 
     @Override
-    public void addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
+    public void addEnvironmentBasedRule(@NotNull final IEnvironmentBasedRule rule) {
         environmentBasedRules.add(rule);
     }
 
@@ -47,7 +49,7 @@ public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRule
     public boolean shouldAllowFeedbackPrompt() {
         for (final IEnvironmentBasedRule rule : environmentBasedRules) {
             if (!rule.shouldAllowFeedbackPrompt(environment)) {
-                Amplify.getLogger().d("Blocking feedback because of environment based rule: " + rule);
+                Amplify.getLogger().debug("Blocking feedback because of environment based rule: " + rule);
                 return false;
             }
         }

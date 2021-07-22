@@ -14,51 +14,46 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RoundRectShape;
-import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.view.View;
-import android.widget.TextView;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.colors.RgbColor;
+import ohos.agp.components.Component;
+import ohos.agp.components.Text;
+import ohos.agp.components.element.ShapeElement;
+import ohos.agp.utils.Color;
+import ohos.app.Context;
+import com.github.stkent.ResourceTable;
 import com.github.stkent.amplify.utils.Constants;
-import com.github.stkent.amplify.utils.DisplayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import static android.util.TypedValue.COMPLEX_UNIT_PX;
-import static java.lang.Math.max;
-
-@SuppressLint("ViewConstructor")
+@SuppressWarnings("ViewConstructor")
 final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
 
-    private static final int NUMBER_OF_COLOR_DIMENSIONS = 3;
-    private static final int DEFAULT_BUTTON_BORDER_WIDTH_DP = 1;
     private static final int DEFAULT_BUTTON_CORNER_RADIUS_PX = 0;
 
-    /* default */ DefaultLayoutQuestionView(
-            final Context context,
-            @NonNull final DefaultLayoutPromptViewConfig config) {
-
-        super(context, R.layout.default_question_view);
-        final TextView subtitleTextView = getSubtitleTextView();
+    /**
+     * DefaultLayoutQuestionView.
+     * Pending : Set background not working.
+     * setBackgroundColor(config.getFillColor()).
+     *
+     * @param context .context
+     *
+     * @param config config
+     */
+    DefaultLayoutQuestionView(final Context context,
+            @NotNull final DefaultLayoutPromptViewConfig config) {
+        super(context, ResourceTable.Layout_default_question_view);
+        final Text subtitleTextView = getSubtitleTextView();
+        ShapeElement shapeElement = new ShapeElement();
+        shapeElement.setShape(ShapeElement.RECTANGLE);
+        shapeElement.setRgbColor(new RgbColor(RgbColor.fromArgbInt(config.getFillColor().getValue())));
+        setBackground(shapeElement);
 
         if (subtitleTextView == null) {
             throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
         }
-
-        setBackgroundColor(config.getFillColor());
-
         getTitleTextView().setTextColor(config.getTitleTextColor());
         subtitleTextView.setTextColor(config.getSubtitleTextColor());
 
@@ -66,7 +61,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         setQuoteButtonUnquoteTextColor(getNegativeButton(), config.getNegativeButtonTextColor());
 
         configureTextSizes(config);
-        configureButtonBackgrounds(context, config);
+        configureButtonBackgrounds(config);
     }
 
     /**
@@ -77,27 +72,29 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
      * @param quoteButtonUnquote the "button" whose text color we wish to set
      * @param color the color we wish to apply
      */
-    private void setQuoteButtonUnquoteTextColor(
-            @NonNull final View quoteButtonUnquote,
-            @ColorInt final int color) {
 
-        if (quoteButtonUnquote instanceof TextView) {
-            ((TextView) quoteButtonUnquote).setTextColor(color);
+    private void setQuoteButtonUnquoteTextColor(
+            @NotNull final Component quoteButtonUnquote, final int color) {
+        if (quoteButtonUnquote instanceof Text) {
+            ((Text) quoteButtonUnquote).setTextColor(new Color(color));
+            ((Text) quoteButtonUnquote).setTextAlignment(72);
         }
+        quoteButtonUnquote.setMarginLeft(15);
+        quoteButtonUnquote.setMarginRight(15);
     }
 
-    private void configureTextSizes(@NonNull final DefaultLayoutPromptViewConfig config) {
+    private void configureTextSizes(@NotNull final DefaultLayoutPromptViewConfig config) {
         final Integer customTextSizePx = config.getCustomTextSizePx();
 
         if (customTextSizePx != null) {
-            getTitleTextView().setTextSize(COMPLEX_UNIT_PX, customTextSizePx);
+            getTitleTextView().setTextSize(customTextSizePx);
             setQuoteButtonUnquoteTextSize(getPositiveButton(), customTextSizePx);
             setQuoteButtonUnquoteTextSize(getNegativeButton(), customTextSizePx);
 
-            final TextView subtitleTextView = getSubtitleTextView();
+            final Text subtitleTextView = getSubtitleTextView();
 
             if (subtitleTextView != null) {
-                subtitleTextView.setTextSize(COMPLEX_UNIT_PX, customTextSizePx);
+                subtitleTextView.setTextSize(customTextSizePx);
             }
         }
     }
@@ -111,25 +108,18 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
      * @param textSize the text size we wish to apply, in pixels
      */
     private void setQuoteButtonUnquoteTextSize(
-            @NonNull final View quoteButtonUnquote,
-            @Px final int textSize) {
+            @NotNull final Component quoteButtonUnquote, final int textSize) {
 
-        if (quoteButtonUnquote instanceof TextView) {
-            ((TextView) quoteButtonUnquote).setTextSize(COMPLEX_UNIT_PX, textSize);
+        if (quoteButtonUnquote instanceof Text) {
+            ((Text) quoteButtonUnquote).setTextSize(textSize);
         }
     }
 
     private void configureButtonBackgrounds(
-            final Context context,
-            @NonNull final DefaultLayoutPromptViewConfig config) {
+            @NotNull final DefaultLayoutPromptViewConfig config) {
 
-        final Integer customButtonBorderWidthPx = config.getCustomButtonBorderWidthPx();
         final Integer customButtonCornerRadiusPx = config.getCustomButtonCornerRadiusPx();
 
-        final Integer actualButtonBorderWidthPx
-                = customDimensionOrDefault(
-                        customButtonBorderWidthPx,
-                        DisplayUtils.dpToPx(context, DEFAULT_BUTTON_BORDER_WIDTH_DP));
 
         final Integer actualButtonCornerRadiusPx
                 = customDimensionOrDefault(
@@ -139,103 +129,32 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         setButtonViewBackground(
                 getPositiveButton(),
                 config.getPositiveButtonBackgroundColor(),
-                config.getPositiveButtonBorderColor(),
-                actualButtonBorderWidthPx,
                 actualButtonCornerRadiusPx);
 
         setButtonViewBackground(
                 getNegativeButton(),
                 config.getNegativeButtonBackgroundColor(),
-                config.getNegativeButtonBorderColor(),
-                actualButtonBorderWidthPx,
                 actualButtonCornerRadiusPx);
     }
 
-    @Px
     private int customDimensionOrDefault(
-            @Nullable @Px final Integer customDimension,
-            @Px final int defaultDimension) {
+            @Nullable
+            final Integer customDimension,
+            final int defaultDimension) {
 
         return customDimension != null ? customDimension : defaultDimension;
     }
 
+
     private void setButtonViewBackground(
-            @NonNull final View button,
-            @ColorInt final int fillColor,
-            @ColorInt final int borderColor,
-            final int borderWidthPx,
+            @NotNull final Component button,
+            final int fillColor,
             final int cornerRadiusPx) {
-
-        final Drawable buttonBackgroundDrawable
-                = getButtonBackgroundDrawable(fillColor, borderColor, borderWidthPx, cornerRadiusPx);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            button.setBackground(buttonBackgroundDrawable);
-        } else {
-            //noinspection deprecation
-            button.setBackgroundDrawable(buttonBackgroundDrawable);
-        }
-    }
-
-    @NonNull
-    private Drawable getButtonBackgroundDrawable(
-            @ColorInt final int fillColor,
-            @ColorInt final int borderColor,
-            final int borderWidthPx,
-            final int cornerRadiusPx) {
-
-        final Drawable defaultDrawable = getStaticButtonBackgroundDrawable(
-                fillColor, borderColor, borderWidthPx, cornerRadiusPx);
-
-        float[] defaultFillColorHSVValues = new float[NUMBER_OF_COLOR_DIMENSIONS];
-        Color.colorToHSV(fillColor, defaultFillColorHSVValues);
-        final int pressedFillColor = Color.HSVToColor(
-                Color.alpha(fillColor),
-                new float[]{
-                        defaultFillColorHSVValues[0],
-                        defaultFillColorHSVValues[1],
-                        max(defaultFillColorHSVValues[2] - 0.1f, 0f)
-                });
-
-        final Drawable pressedDrawable = getStaticButtonBackgroundDrawable(
-                pressedFillColor, borderColor, borderWidthPx, cornerRadiusPx);
-
-        final StateListDrawable result = new StateListDrawable();
-        result.addState(new int[] {android.R.attr.state_pressed}, pressedDrawable);
-        result.addState(new int[] {android.R.attr.state_enabled}, defaultDrawable);
-
-        return result;
-    }
-
-    @NonNull
-    private Drawable getStaticButtonBackgroundDrawable(
-            @ColorInt final int fillColor,
-            @ColorInt final int borderColor,
-            final int borderWidthPx,
-            final int cornerRadiusPx) {
-
-        final ShapeDrawable borderDrawable = new ShapeDrawable(
-                getRoundRectShapeWithOuterCornerRadiusPx(cornerRadiusPx));
-
-        borderDrawable.getPaint().setColor(borderColor);
-
-        final ShapeDrawable fillDrawable = new ShapeDrawable(
-                getRoundRectShapeWithOuterCornerRadiusPx(cornerRadiusPx - borderWidthPx));
-
-        fillDrawable.getPaint().setColor(fillColor);
-
-        final LayerDrawable result
-                = new LayerDrawable(new Drawable[] {borderDrawable, fillDrawable});
-
-        result.setLayerInset(1, borderWidthPx, borderWidthPx, borderWidthPx, borderWidthPx);
-
-        return result;
-    }
-
-    @NonNull
-    private RoundRectShape getRoundRectShapeWithOuterCornerRadiusPx(@Px final int rPx) {
-        return new RoundRectShape(
-                new float[] {rPx, rPx, rPx, rPx, rPx, rPx, rPx, rPx}, null, null);
+        ShapeElement shapeElement = new ShapeElement();
+        shapeElement.setShape(ShapeElement.RECTANGLE);
+        shapeElement.setRgbColor(new RgbColor(RgbColor.fromArgbInt(fillColor)));
+        shapeElement.setCornerRadius(cornerRadiusPx);
+        button.setBackground(shapeElement);
     }
 
 }

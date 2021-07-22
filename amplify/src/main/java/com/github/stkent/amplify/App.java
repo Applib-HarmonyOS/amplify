@@ -14,20 +14,27 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
+import ohos.app.Context;
+import ohos.bundle.ApplicationInfo;
+import ohos.bundle.BundleInfo;
+import ohos.bundle.IBundleManager;
+import ohos.rpc.RemoteException;
+import org.jetbrains.annotations.NotNull;
+import static ohos.bundle.IBundleManager.GET_BUNDLE_DEFAULT;
+
+/**
+ * App implements IApp.
+ */
 
 public final class App implements IApp {
 
-    @NonNull
+    @NotNull
     private final String name;
 
-    @NonNull
+    @NotNull
     private final String versionName;
 
     private final int versionCode;
@@ -36,30 +43,34 @@ public final class App implements IApp {
 
     private final long lastUpdateTime;
 
-    @NonNull
+    @NotNull
     private final InstallSource installSource;
 
-    public App(@NonNull final Context context) {
-        final PackageManager packageManager = context.getPackageManager();
+    /**
+     * App constructor.
+     *
+     * @param context context.
+     */
+    public App(@NotNull final Context context) {
         final ApplicationInfo applicationInfo = context.getApplicationInfo();
-        final PackageInfo packageInfo = getPackageInfo(context);
-        final String installerPackageName = packageManager.getInstallerPackageName(context.getPackageName());
-
-        name = applicationInfo.loadLabel(packageManager).toString();
-        versionName = packageInfo.versionName;
-        versionCode = packageInfo.versionCode;
-        firstInstallTime = packageInfo.firstInstallTime;
-        lastUpdateTime = packageInfo.lastUpdateTime;
+        final BundleInfo bundleInfo = getBundleInfo(context);
+        final String installerPackageName;
+        installerPackageName  = bundleInfo.name;
+        name = applicationInfo.getLabel();
+        versionName = bundleInfo.getVersionName();
+        versionCode = bundleInfo.getVersionCode();
+        firstInstallTime = bundleInfo.getInstallTime();
+        lastUpdateTime =  bundleInfo.getUpdateTime();
         installSource = InstallSource.fromInstallerPackageName(installerPackageName);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getName() {
         return name;
     }
 
-    @NonNull
+    @NotNull
     public String getVersionName() {
         return versionName;
     }
@@ -78,21 +89,20 @@ public final class App implements IApp {
         return lastUpdateTime;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public InstallSource getInstallSource() {
         return installSource;
     }
 
-    @NonNull
-    private PackageInfo getPackageInfo(@NonNull final Context context) {
-        final PackageManager packageManager = context.getPackageManager();
+    @NotNull
+    private BundleInfo getBundleInfo(@NotNull final Context context) {
+        final IBundleManager iBundleManager = context.getBundleManager();
 
         try {
-            return packageManager.getPackageInfo(context.getPackageName(), 0);
-        } catch (final PackageManager.NameNotFoundException ignored) {
-            //noinspection ConstantConditions: packageInfo should always be available for the embedding app.
-            return null;
+            return iBundleManager.getBundleInfo(context.getBundleName(), GET_BUNDLE_DEFAULT);
+        } catch (final RemoteException ignored) {
+            return new BundleInfo();
         }
     }
 

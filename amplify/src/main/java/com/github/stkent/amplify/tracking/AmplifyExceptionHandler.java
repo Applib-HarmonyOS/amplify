@@ -14,29 +14,38 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import static java.lang.Thread.UncaughtExceptionHandler;
+
+
+
 
 /**
  * An exception handler used to observe application crashes. Received
  * exceptions are forwarded to the provided default exception handler.
  */
-public final class AmplifyExceptionHandler implements UncaughtExceptionHandler {
+public final class AmplifyExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    @NonNull
+    @NotNull
     private final IAppLevelEventRulesManager appLevelEventRulesManager;
 
     @Nullable
     private final UncaughtExceptionHandler defaultExceptionHandler;
 
+    /**
+     * AmplifyExceptionHandler constructor.
+     *
+     * @param appLevelEventRulesManager appLevelEventRulesManager.
+     *
+     * @param defaultExceptionHandler defaultExceptionHandler.
+     */
     public AmplifyExceptionHandler(
-            @NonNull final IAppLevelEventRulesManager appLevelEventRulesManager,
+            @NotNull final IAppLevelEventRulesManager appLevelEventRulesManager,
             @Nullable final UncaughtExceptionHandler defaultExceptionHandler) {
 
         this.appLevelEventRulesManager = appLevelEventRulesManager;

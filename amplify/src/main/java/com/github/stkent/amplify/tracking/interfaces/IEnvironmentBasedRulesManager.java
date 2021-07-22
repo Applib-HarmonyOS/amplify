@@ -14,14 +14,16 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of a class that manages multiple environment based prompt timing
  * rules.
  */
+
 public interface IEnvironmentBasedRulesManager extends IRulesManager {
 
     /**
@@ -29,6 +31,6 @@ public interface IEnvironmentBasedRulesManager extends IRulesManager {
      *
      * @param rule the prompt timing rule to be added
      */
-    void addEnvironmentBasedRule(@NonNull IEnvironmentBasedRule rule);
+    void addEnvironmentBasedRule(@NotNull IEnvironmentBasedRule rule);
 
 }

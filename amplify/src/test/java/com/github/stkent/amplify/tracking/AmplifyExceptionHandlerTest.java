@@ -14,20 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
-
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
+
+/**
+ * AmplifyExceptionHandlerTest extends BaseTest
+ */
 
 public class AmplifyExceptionHandlerTest extends BaseTest {
 

@@ -14,16 +14,20 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
 /**
  * An abstract representation of a class used to aggregate the states of several other prompt timing
  * rules.
  */
+
 public interface IRulesManager {
 
     /**
-     * @return true if all managed prompt timing rules are satisfied; false otherwise
+     * shouldAllowFeedbackPrompt.
+     *
+     * @return true if all managed prompt timing rules are satisfied; false otherwise.
      */
     boolean shouldAllowFeedbackPrompt();
 

@@ -14,80 +14,85 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
+import ohos.app.Context;
+import ohos.global.configuration.DeviceCapability;
+import ohos.system.DeviceInfo;
+import org.jetbrains.annotations.NotNull;
 
-import static java.util.Locale.US;
-
+/**
+ * Device implements IDevice.
+ */
 public final class Device implements IDevice {
 
-    @NonNull
-    private static String getDensityBucketString(@NonNull final DisplayMetrics displayMetrics) {
-        switch (displayMetrics.densityDpi) {
-            case DisplayMetrics.DENSITY_LOW:
-                return "ldpi";
-            case DisplayMetrics.DENSITY_MEDIUM:
+    @NotNull
+    private static String getDensityBucketString(@NotNull final DeviceCapability deviceCapability) {
+        switch (deviceCapability.screenDensity) {
+            case DeviceCapability.SCREEN_SDPI:
+                return "sdpi";
+            case DeviceCapability.SCREEN_MDPI:
                 return "mdpi";
-            case DisplayMetrics.DENSITY_HIGH:
-                return "hdpi";
-            case DisplayMetrics.DENSITY_XHIGH:
-                return "xhdpi";
-            case DisplayMetrics.DENSITY_XXHIGH:
-                return "xxhdpi";
-            case DisplayMetrics.DENSITY_XXXHIGH:
-                return "xxxhdpi";
-            case DisplayMetrics.DENSITY_TV:
-                return "tvdpi";
+            case DeviceCapability.SCREEN_LDPI:
+                return "ldpi";
+            case DeviceCapability.SCREEN_XLDPI:
+                return "xldpi";
+            case DeviceCapability.SCREEN_XXLDPI:
+                return "xxldpi";
+            case DeviceCapability.SCREEN_XXXLDPI:
+                return "xxxldpi";
             default:
                 return "Unknown";
         }
     }
 
-    @NonNull
+    @NotNull
     private final String resolution;
 
-    @NonNull
+    @NotNull
     private final String actualDensity;
 
-    @NonNull
+    @NotNull
     private final String densityBucket;
 
-    public Device(@NonNull final Context context) {
-        final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        resolution = displayMetrics.heightPixels + "x" + displayMetrics.widthPixels;
-        actualDensity = displayMetrics.densityDpi + "dpi";
-        densityBucket = getDensityBucketString(displayMetrics);
+    /**
+     * Device constructor.
+     *
+     * @param context context.
+     */
+    public Device(@NotNull final Context context) {
+        final DeviceCapability deviceCapability = context.getResourceManager().getDeviceCapability();
+        resolution = deviceCapability.height + "x" + deviceCapability.width;
+        actualDensity = deviceCapability.screenDensity + "dpi";
+        densityBucket = getDensityBucketString(deviceCapability);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getManufacturer() {
-        return Build.MANUFACTURER.toUpperCase(US);
+        return DeviceInfo.getDeviceType();
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getModel() {
-        return Build.MODEL.toUpperCase(US);
+        return DeviceInfo.getModel();
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getResolution() {
         return resolution;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getActualDensity() {
         return actualDensity;
     }
 
-    @NonNull
+    @NotNull
     public String getDensityBucket() {
         return densityBucket;
     }

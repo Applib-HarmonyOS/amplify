@@ -14,32 +14,29 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.github.stkent.amplify.prompt.interfaces.IQuestion;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class Question implements IQuestion {
 
-    @NonNull
+    @NotNull
     private final String title;
 
     @Nullable
     private final String subTitle;
 
-    @NonNull
+    @NotNull
     private final String positiveButtonLabel;
 
-    @NonNull
+    @NotNull
     private final String negativeButtonLabel;
 
-    /* default */ Question(
-            @NonNull  final String title,
-            @Nullable final String subTitle,
-            @NonNull  final String positiveButtonLabel,
-            @NonNull  final String negativeButtonLabel) {
+    Question(@NotNull  final String title, @Nullable final String subTitle,
+            @NotNull  final String positiveButtonLabel, @NotNull  final String negativeButtonLabel) {
 
         this.title = title;
         this.subTitle = subTitle;
@@ -47,7 +44,7 @@ final class Question implements IQuestion {
         this.negativeButtonLabel = negativeButtonLabel;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getTitle() {
         return title;
@@ -59,13 +56,13 @@ final class Question implements IQuestion {
         return subTitle;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getPositiveButtonLabel() {
         return positiveButtonLabel;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String getNegativeButtonLabel() {
         return negativeButtonLabel;

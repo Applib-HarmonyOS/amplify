@@ -14,23 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.annotation.SuppressLint;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
-
 import org.junit.Test;
-
 import java.util.concurrent.TimeUnit;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ *
+ * AmazonAppStoreRuleTest extends BaseTest
+ */
 public class CooldownDaysRuleTest extends BaseTest {
 
-    @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
@@ -50,7 +50,7 @@ public class CooldownDaysRuleTest extends BaseTest {
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
+    // @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleBlocksPromptIfCooldownPeriodHasNotPassed() {
@@ -72,7 +72,7 @@ public class CooldownDaysRuleTest extends BaseTest {
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
+    // @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfCooldownPeriodHasPassed() {

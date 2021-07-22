@@ -14,18 +14,19 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.components.AttrSet;
+import ohos.app.Context;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * DefaultLayoutPromptView extends BasePromptView DefaultLayoutQuestionView, DefaultLayoutThanksView
+ *         implements IPromptView.
+ */
 
 public final class DefaultLayoutPromptView
         extends BasePromptView<DefaultLayoutQuestionView, DefaultLayoutThanksView>
@@ -33,27 +34,41 @@ public final class DefaultLayoutPromptView
 
     private static final String DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY = "DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
 
-    // NonNull
     private DefaultLayoutPromptViewConfig config;
 
     public DefaultLayoutPromptView(final Context context) {
         this(context, null);
     }
 
-    public DefaultLayoutPromptView(final Context context, @Nullable final AttributeSet attributeSet) {
+    public DefaultLayoutPromptView(final Context context, @Nullable final AttrSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
+    /**
+     * DefaultLayoutPromptView constructor.
+     *
+     * @param context context.
+     *
+     * @param attributeSet attribute set.
+     *
+     * @param defStyleAttr def style Attr.
+     */
     public DefaultLayoutPromptView(
             final Context context,
-            @Nullable final AttributeSet attributeSet,
+            @Nullable final AttrSet attributeSet,
             final int defStyleAttr) {
 
         super(context, attributeSet, defStyleAttr);
         init(attributeSet);
+        System.out.println("CHIRAG : defaultlayoutpromptview : attr " + attributeSet.getLength());
     }
 
-    public void applyConfig(@NonNull final DefaultLayoutPromptViewConfig config) {
+    /**
+     ** apply config.
+     *
+     * @param config DefaultLayoutPromptViewConfig.
+     */
+    public void applyConfig(@NotNull final DefaultLayoutPromptViewConfig config) {
         if (isDisplayed()) {
             throw new IllegalStateException("Configuration cannot be changed after the prompt is first displayed.");
         }
@@ -61,47 +76,19 @@ public final class DefaultLayoutPromptView
         this.config = config;
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        final Parcelable superState = super.onSaveInstanceState();
-
-        final Bundle result = new Bundle();
-        result.putParcelable(SUPER_STATE_KEY, superState);
-        result.putParcelable(DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY, config);
-        return result;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@Nullable final Parcelable state) {
-        final Bundle savedState = (Bundle) state;
-
-        if (savedState != null) {
-            final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
-            super.onRestoreInstanceState(superSavedState);
-
-            final DefaultLayoutPromptViewConfig config = savedState.getParcelable(DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY);
-
-            if (config != null) {
-                this.config = config;
-            }
-
-            restorePresenterState(superSavedState);
-        }
-    }
 
     @Override
     protected boolean isConfigured() {
-        // All non-null DefaultLayoutPromptViewConfigs are valid.
         return true;
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected DefaultLayoutQuestionView getQuestionView() {
         return new DefaultLayoutQuestionView(getContext(), config);
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected DefaultLayoutThanksView getThanksView() {
         return new DefaultLayoutThanksView(getContext(), config);
@@ -111,15 +98,10 @@ public final class DefaultLayoutPromptView
      * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see documentation of
      * that method for confirmation.
      */
-    private void init(@Nullable final AttributeSet attributeSet) {
-        // NonNull
-        final TypedArray typedArray = getContext()
-                .getTheme()
-                .obtainStyledAttributes(attributeSet, R.styleable.DefaultLayoutPromptView, 0, 0);
-
-        config = new DefaultLayoutPromptViewConfig(typedArray);
-
-        typedArray.recycle();
+    private void init(@Nullable final AttrSet attributeSet) {
+        if (attributeSet != null) {
+            config = new DefaultLayoutPromptViewConfig(attributeSet);
+        }
     }
 
 }

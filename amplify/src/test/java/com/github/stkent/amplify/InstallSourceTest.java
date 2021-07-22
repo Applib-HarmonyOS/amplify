@@ -14,85 +14,33 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import com.github.stkent.amplify.InstallSource.AmazonAppStoreInstallSource;
-import com.github.stkent.amplify.InstallSource.AmazonUndergroundInstallSource;
-import com.github.stkent.amplify.InstallSource.GooglePlayStoreInstallSource;
-import com.github.stkent.amplify.InstallSource.PackageInstallerInstallSource;
-import com.github.stkent.amplify.InstallSource.UnknownInstallSource;
-import com.github.stkent.amplify.InstallSource.UnrecognizedInstallSource;
 import com.github.stkent.amplify.helpers.BaseTest;
-
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
-
 import static org.junit.Assert.assertTrue;
 
+/**
+ * InstallSourceTest extends BaseTest
+ */
 public class InstallSourceTest extends BaseTest {
 
+
     @Test
-    public void testGooglePlayStoreInstallSourceIsParsedCorrectly() {
+    public void testHuaweiAppGalleryInstallSourceIsParsedCorrectly() {
         // Act
-        final InstallSource installSource = InstallSource.fromInstallerPackageName("com.android.vending");
+        final InstallSource installSource = InstallSource.fromInstallerPackageName("com.huawei.appmarket");
 
         // Assert
         assertTrue(
-                "Package name is correctly identified as belonging to the Google Play Store",
-                installSource instanceof GooglePlayStoreInstallSource);
+                "Package name is correctly identified as belonging to the Huawei App Gallery",
+                installSource instanceof InstallSource.HuaweiAppGalleryInstallSource);
 
         assertEquals(
-                "Google Play Store install source has correct description",
-                "Google Play Store",
-                installSource.toString());
-    }
-
-    @Test
-    public void testAmazonAppStoreInstallSourceIsParsedCorrectly() {
-        // Act
-        InstallSource installSource = InstallSource.fromInstallerPackageName("com.amazon.venezia");
-
-        // Assert
-        assertTrue(
-                "Package name is correctly identified as belonging to the Amazon Appstore",
-                installSource instanceof AmazonAppStoreInstallSource);
-
-        assertEquals(
-                "Amazon Appstore install source has correct description",
-                "Amazon Appstore",
-                installSource.toString());
-    }
-
-    @Test
-    public void testAmazonUndergroundInstallSourceIsParsedCorrectly() {
-        // Act
-        final InstallSource installSource = InstallSource.fromInstallerPackageName("com.amazon.mshop.android");
-
-        // Assert
-        assertTrue(
-                "Package name is correctly identified as belonging to Amazon Underground",
-                installSource instanceof AmazonUndergroundInstallSource);
-
-        assertEquals(
-                "Amazon Underground install source has correct description",
-                "Amazon Underground",
-                installSource.toString());
-    }
-
-    @Test
-    public void testPackageInstallerInstallSourceIsParsedCorrectly() {
-        // Act
-        final InstallSource installSource = InstallSource.fromInstallerPackageName("com.google.android.packageinstaller");
-
-        // Assert
-        assertTrue(
-                "Package name is correctly identified as belonging to the Android Package Installer",
-                installSource instanceof PackageInstallerInstallSource);
-
-        assertEquals(
-                "Package Installer install source has correct description",
-                "Package Installer",
+                "Huawei App Gallery install source has correct description",
+                "Huawei App Gallery",
                 installSource.toString());
     }
 
@@ -107,7 +55,7 @@ public class InstallSourceTest extends BaseTest {
         // Assert
         assertTrue(
                 "Non-null package name is correctly identified as an unrecognized install source",
-                installSource instanceof UnrecognizedInstallSource);
+                installSource instanceof InstallSource.UnrecognizedInstallSource);
 
         assertEquals(
                 "Unrecognized install source returns raw package name as description",
@@ -124,7 +72,7 @@ public class InstallSourceTest extends BaseTest {
         // Assert
         assertTrue(
                 "null package name is correctly identified as an unknown install source",
-                installSource instanceof UnknownInstallSource);
+                installSource instanceof InstallSource.UnknownInstallSource);
 
         assertEquals(
                 "Unknown install source has correct description",

@@ -14,30 +14,31 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.rules;
 
-import android.annotation.SuppressLint;
-
 import com.github.stkent.amplify.helpers.BaseTest;
-
+import ohos.rpc.RemoteException;
 import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * VersionCodeChangedRuleTest extends BaseTest
+ */
 public class VersionCodeChangedRuleTest extends BaseTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
-        // Arrange
+    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() throws RemoteException {
+
         final int fakeCurrentVersionCode = 42;
         final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(fakeCurrentVersionCode);
 
-        // Act
+
         final boolean ruleShouldAllowFeedbackPrompt = versionCodeChangedRule.shouldAllowFeedbackPromptByDefault();
 
-        // Assert
+
         assertTrue(
                 "Feedback prompt should be allowed if the associated event has never occurred.",
                 ruleShouldAllowFeedbackPrompt);
@@ -46,37 +47,38 @@ public class VersionCodeChangedRuleTest extends BaseTest {
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Test
     public void testThatRuleBlocksPromptIfAppVersionCodeHasNotChanged() {
-        // Arrange
+
         final int fakeCachedVersionCode = 42;
         final int fakeCurrentVersionCode = fakeCachedVersionCode;
         final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(fakeCurrentVersionCode);
 
-        // Act
+
         final boolean ruleShouldAllowFeedbackPrompt =
                 versionCodeChangedRule.shouldAllowFeedbackPrompt(fakeCurrentVersionCode);
 
-        // Assert
+
         assertFalse(
                 "Feedback prompt should be blocked if the app version code has not changed",
                 ruleShouldAllowFeedbackPrompt);
     }
 
-    @SuppressLint("Assert")
+
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfAppVersionCodeHasIncreased() {
-        // Arrange
+    public void testThatRuleAllowsPromptIfAppVersionCodeHasIncreased() throws RemoteException {
+
         final int fakeCachedVersionCode = 42;
         final int fakeCurrentVersionCode = 69;
         assert fakeCachedVersionCode < fakeCurrentVersionCode;
 
-        final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(fakeCurrentVersionCode);
+        final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(
+                fakeCurrentVersionCode);
 
-        // Act
+
         final boolean ruleShouldAllowFeedbackPrompt =
                 versionCodeChangedRule.shouldAllowFeedbackPrompt(fakeCachedVersionCode);
 
-        // Assert
+
         assertTrue(
                 "Feedback prompt should be allowed if the app version code has changed",
                 ruleShouldAllowFeedbackPrompt);

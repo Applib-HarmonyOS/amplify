@@ -14,65 +14,81 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
-import android.annotation.SuppressLint;
-import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleableRes;
-
-import com.github.stkent.amplify.R;
+import ohos.agp.components.Attr;
+import ohos.agp.components.AttrSet;
+import ohos.utils.Parcel;
+import ohos.utils.Sequenceable;
 import com.github.stkent.amplify.utils.Constants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import java.util.Optional;
 
-public final class CustomLayoutPromptViewConfig implements Parcelable {
-
-    private static final int DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED = Integer.MAX_VALUE;
-
-    /**
-     * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
-     */
+/**
+ * CustomLayoutPromptViewConfig implements Sequenceable.
+ */
+public final class CustomLayoutPromptViewConfig implements Sequenceable {
     @Nullable
-    @LayoutRes
-    private static Integer suppliedLayoutOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
-        final int layoutResourceId = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
-
-        //noinspection ResourceType
-        return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
+    private static Integer suppliedLayoutOrNull(@NotNull AttrSet attrSet, final String index) {
+        Optional<Attr> optionalAttr = attrSet.getAttr(index);
+        if (optionalAttr.isPresent()) {
+            return optionalAttr.get().getIntegerValue();
+        } else {
+            return null;
+        }
     }
 
     @Nullable
-    @LayoutRes
     private final Integer questionLayout;
 
     @Nullable
-    @LayoutRes
     private final Integer thanksLayout;
 
-    public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
+    /**
+     * CustomLayoutPromptViewConfig constructor.
+     *
+     * @param attrSet attribute set.
+     */
+    public CustomLayoutPromptViewConfig(@NotNull final AttrSet attrSet) {
+        System.out.println("CHIRAG : CustomLayoutPromptViewConfig");
+        System.out.println("CHIRAG : CustomLayoutPromptView attr length " + attrSet.getLength());
         this.questionLayout =
-                suppliedLayoutOrNull(typedArray, R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
-
+                suppliedLayoutOrNull(attrSet, "prompt_view_question_layout");
         this.thanksLayout =
-                suppliedLayoutOrNull(typedArray, R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
+                suppliedLayoutOrNull(attrSet, "prompt_view_thanks_layout");
+        if(this.questionLayout == null){
+            System.out.println("CHIRAG : CustomLayoutPromptViewConfig question null");
+        }
+        if(this.thanksLayout == null){
+            System.out.println("CHIRAG : CustomLayoutPromptViewConfig thanks null");
+        }
     }
 
-    public CustomLayoutPromptViewConfig(
-            @LayoutRes final int questionLayout,
-            @Nullable @LayoutRes final Integer thanksLayout) {
-
+    /**
+     * CustomLayoutPromptViewConfig constructor.
+     *
+     * @param questionLayout int question layout value.
+     * @param thanksLayout int thanks layout value.
+     */
+    public CustomLayoutPromptViewConfig(final int questionLayout, @Nullable final Integer thanksLayout) {
         this.questionLayout = questionLayout;
         this.thanksLayout = thanksLayout;
     }
 
+    /**
+     * check if it is valid to give prompt.
+     *
+     */
     public boolean isValid() {
         return questionLayout != null;
     }
 
-    @LayoutRes
+    /**
+     * get Question Layout.
+     *
+     */
     public int getQuestionLayout() {
         if (questionLayout == null) {
             throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
@@ -81,43 +97,18 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
         return questionLayout;
     }
 
-    @Nullable @LayoutRes
+    @Nullable
     public Integer getThanksLayout() {
         return thanksLayout;
     }
 
-    // Parcelable
-
     @Override
-    public int describeContents() {
-        return 0;
+    public boolean marshalling(Parcel parcel) {
+        return false;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(questionLayout);
-        dest.writeValue(thanksLayout);
+    public boolean unmarshalling(Parcel parcel) {
+        return false;
     }
-
-    @SuppressLint("ParcelClassLoader")
-    protected CustomLayoutPromptViewConfig(Parcel in) {
-        questionLayout = (Integer) in.readValue(null);
-        thanksLayout = (Integer) in.readValue(null);
-    }
-
-    public static final Parcelable.Creator<CustomLayoutPromptViewConfig> CREATOR
-            = new Parcelable.Creator<CustomLayoutPromptViewConfig>() {
-
-        @Override
-        public CustomLayoutPromptViewConfig createFromParcel(final Parcel in) {
-            return new CustomLayoutPromptViewConfig(in);
-        }
-
-        @Override
-        public CustomLayoutPromptViewConfig[] newArray(final int size) {
-            return new CustomLayoutPromptViewConfig[size];
-        }
-
-    };
-
 }

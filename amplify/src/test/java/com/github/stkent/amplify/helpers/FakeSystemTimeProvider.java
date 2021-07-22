@@ -14,10 +14,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.helpers;
 
 import com.github.stkent.amplify.utils.time.ISystemTimeProvider;
 
+/**
+ * FakeSystemTimeProvider implements ISystemTimeProvider
+ */
 public class FakeSystemTimeProvider implements ISystemTimeProvider {
 
     private final long fakeCurrentTimeMillis;

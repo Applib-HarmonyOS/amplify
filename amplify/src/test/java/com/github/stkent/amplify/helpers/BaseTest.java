@@ -14,23 +14,26 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.helpers;
 
 import com.github.stkent.amplify.utils.time.RealSystemTimeProvider;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
-
 import org.junit.After;
 import org.junit.Before;
-
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * BaseTest
+ */
 public class BaseTest {
 
     public static final long MARCH_18_2014_838PM_UTC = 1395175090000L;
     public static final String DEFAULT_MOCK_EVENT_TRACKING_KEY = "DEFAULT_MOCK_EVENT_TRACKING_KEY";
 
     private static final RealSystemTimeProvider REAL_SYSTEM_TIME_PROVIDER = new RealSystemTimeProvider();
-    private static final FakeSystemTimeProvider DEFAULT_FAKE_SYSTEM_TIME_PROVIDER = new FakeSystemTimeProvider(MARCH_18_2014_838PM_UTC);
+    private static final FakeSystemTimeProvider DEFAULT_FAKE_SYSTEM_TIME_PROVIDER
+            = new FakeSystemTimeProvider(MARCH_18_2014_838PM_UTC);
 
     protected BaseTest() {
         // This constructor intentionally left blank.
@@ -40,6 +43,9 @@ public class BaseTest {
         SystemTimeUtil.setSharedInstance(new FakeSystemTimeProvider(fakeCurrentTimeMillis));
     }
 
+    /**
+     * public final void globalSetup()
+     */
     @Before
     public final void globalSetUp() {
         SystemTimeUtil.setSharedInstance(DEFAULT_FAKE_SYSTEM_TIME_PROVIDER);
@@ -57,6 +63,9 @@ public class BaseTest {
         // This method intentionally left blank.
     }
 
+    /**
+     * public final void globalTearDown()
+     */
     @After
     public final void globalTearDown() {
         localTearDown();

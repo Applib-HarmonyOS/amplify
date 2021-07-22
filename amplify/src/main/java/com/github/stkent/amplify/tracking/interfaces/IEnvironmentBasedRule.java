@@ -14,11 +14,11 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
-
 import com.github.stkent.amplify.IEnvironment;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of a prompt timing rule that depends on the environment in which the
@@ -33,6 +33,6 @@ public interface IEnvironmentBasedRule extends IRule {
      *                    currently running
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown; false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(@NonNull IEnvironment environment);
+    boolean shouldAllowFeedbackPrompt(@NotNull IEnvironment environment);
 
 }

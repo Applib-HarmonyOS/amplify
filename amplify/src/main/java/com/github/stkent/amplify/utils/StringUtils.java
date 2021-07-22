@@ -14,23 +14,34 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.utils;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * StringUtils class.
+ */
 public final class StringUtils {
 
     /**
+     * defaultIfBlank.
+     *
+     * @param primaryString string to be checked.
+     * @param defaultString return this string is primary is null.
      * @return <code>primaryString</code> if it is not blank (i.e. non-null, non-empty, and not pure whitespace);
      *         <code>defaultString</code> otherwise
      */
-    @NonNull
-    public static String defaultIfBlank(@Nullable final String primaryString, @NonNull final String defaultString) {
+    @NotNull
+    public static String defaultIfBlank(@Nullable final String primaryString, @NotNull final String defaultString) {
         return isBlank(primaryString) ? defaultString : primaryString;
     }
 
     /**
+     * is blank check if char sequence is null.
+     *
+     * @param charSequence Char sequence.
      * @return true if <code>charSequence</code> is null, empty, or whitespace; false otherwise
      */
     private static boolean isBlank(@Nullable final CharSequence charSequence) {

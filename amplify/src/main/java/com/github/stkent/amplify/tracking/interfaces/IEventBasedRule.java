@@ -14,15 +14,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An abstract representation of a prompt timing rule that depends on a tracked event.
  *
  * @param <T> the type of the value tracked by this event (Integer, Long or String)
  */
+
 public interface IEventBasedRule<T> extends IRule {
 
     /**
@@ -40,7 +42,7 @@ public interface IEventBasedRule<T> extends IRule {
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
      *         false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(@NonNull T cachedEventValue);
+    boolean shouldAllowFeedbackPrompt(@NotNull T cachedEventValue);
 
 
 }

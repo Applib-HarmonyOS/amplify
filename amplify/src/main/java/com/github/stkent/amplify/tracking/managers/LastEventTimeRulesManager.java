@@ -14,36 +14,39 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.managers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+package com.github.stkent.amplify.tracking.managers;
 
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+
+/**
+ * LastEventTimeRulesManager extends BaseEventsManager.
+ */
 public final class LastEventTimeRulesManager extends BaseEventsManager<Long> {
 
-    public LastEventTimeRulesManager(@NonNull final ISettings<Long> settings) {
+    public LastEventTimeRulesManager(@NotNull final ISettings<Long> settings) {
         super(settings);
     }
 
-    @NonNull
+    @NotNull
     @Override
     protected String getTrackedEventDimensionDescription() {
         return "Last time";
     }
 
-    @NonNull
+    @NotNull
     @Override
-    protected String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
-        final Long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
+    protected String getEventTrackingStatusStringSuffix(@NotNull final Long cachedEventValue) {
+        final long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
         return "last occurred " + daysSinceLastEvent + " days ago";
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Long getUpdatedTrackingValue(@Nullable final Long cachedTrackingValue) {
         return SystemTimeUtil.currentTimeMillis();

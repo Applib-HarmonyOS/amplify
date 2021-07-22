@@ -14,16 +14,20 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Interface IApp.
+ */
 public interface IApp {
 
-    @NonNull
+    @NotNull
     String getName();
 
-    @NonNull
+    @NotNull
     String getVersionName();
 
     int getVersionCode();
@@ -32,7 +36,7 @@ public interface IApp {
 
     long getLastUpdateTime();
 
-    @NonNull
+    @NotNull
     InstallSource getInstallSource();
 
 }

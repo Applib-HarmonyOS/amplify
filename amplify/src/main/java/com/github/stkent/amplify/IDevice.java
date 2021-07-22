@@ -14,25 +14,30 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Interface IDevice.
+ */
 
 public interface IDevice {
 
-    @NonNull
+    @NotNull
     String getManufacturer();
 
-    @NonNull
+    @NotNull
     String getModel();
 
-    @NonNull
+    @NotNull
     String getResolution();
 
-    @NonNull
+    @NotNull
     String getActualDensity();
 
-    @NonNull
+    @NotNull
     String getDensityBucket();
 
 }

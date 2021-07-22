@@ -14,6 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.github.stkent.amplify.prompt;
 
 import com.github.stkent.amplify.helpers.BaseTest;
@@ -21,19 +22,21 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
-
+import ohos.rpc.RemoteException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * PromptPresenterTest extends BaseTest
+ */
 public class PromptPresenterTest extends BaseTest {
 
     private PromptPresenter promptPresenter;
@@ -53,7 +56,7 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToQueryUserOpinionWhenStarted() {
+    public void testThatPresenterInstructsPromptViewToQueryUserOpinionWhenStarted() throws RemoteException {
         // Act
         promptPresenter.start();
 
@@ -64,7 +67,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToRequestPositiveFeedbackWhenUserReportsPositiveOpinion() {
+    public void testThatPresenterInstructsPromptViewToRequestPositiveFeedbackWhenUserReportsPositiveOpinion()
+            throws RemoteException {
         // Act
         promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.POSITIVE);
 
@@ -75,7 +79,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToRequestCriticalFeedbackWhenUserReportsCriticalOpinion() {
+    public void testThatPresenterInstructsPromptViewToRequestCriticalFeedbackWhenUserReportsCriticalOpinion()
+            throws RemoteException {
         // Act
         promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.CRITICAL);
 
@@ -86,7 +91,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterThrowsCorrectExceptionIfUserFeedbackActionIsSuppliedBeforeUserOpinion() {
+    public void testThatPresenterThrowsCorrectExceptionIfUserFeedbackActionIsSuppliedBeforeUserOpinion()
+            throws RemoteException {
         // Arrange
         final IPromptPresenter.UserFeedbackAction anyValidUserFeedbackAction
                 = IPromptPresenter.UserFeedbackAction.AGREED;
@@ -99,7 +105,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToShowProvidedThanksViewWhenUserAgreesToGivePositiveFeedback() {
+    public void testThatPresenterInstructsPromptViewToShowProvidedThanksViewWhenUserAgreesToGivePositiveFeedback()
+            throws RemoteException {
         // Arrange
         when(mockPromptView.providesThanksView()).thenReturn(true);
 
@@ -114,7 +121,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToDismissWhenUserAgreesToGivePositiveFeedbackAndNoThanksViewProvided() {
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserAgreesToGivePositiveFeedbackAndNoThanksViewProvided()
+            throws RemoteException {
         // Arrange
         when(mockPromptView.providesThanksView()).thenReturn(false);
 
@@ -129,7 +137,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToDismissWhenUserDeclinesToGivePositiveFeedback() {
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserDeclinesToGivePositiveFeedback()
+            throws RemoteException {
         // Act
         promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.POSITIVE);
         promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.DECLINED);
@@ -141,7 +150,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToShowProvidedThanksViewWhenUserAgreesToGiveCriticalFeedback() {
+    public void testThatPresenterInstructsPromptViewToShowProvidedThanksViewWhenUserAgreesToGiveCriticalFeedback()
+            throws RemoteException {
         // Arrange
         when(mockPromptView.providesThanksView()).thenReturn(true);
 
@@ -156,7 +166,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToDismissWhenUserAgreesToGiveCriticalFeedbackAndNoThanksViewProvided() {
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserAgreesToGiveCriticalFeedbackAndNoThanksViewProvided()
+            throws RemoteException {
         // Arrange
         when(mockPromptView.providesThanksView()).thenReturn(false);
 
@@ -171,7 +182,8 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPresenterInstructsPromptViewToDismissWhenUserDeclinesToGiveCriticalFeedback() {
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserDeclinesToGiveCriticalFeedback()
+            throws RemoteException {
         // Act
         promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.CRITICAL);
         promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.DECLINED);
@@ -183,7 +195,7 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPromptPresenterPassesReceivedEventsToInjectedEventListener() {
+    public void testThatPromptPresenterPassesReceivedEventsToInjectedEventListener() throws RemoteException {
         // Arrange
         final IEvent mockEvent = mock(IEvent.class);
 
@@ -195,7 +207,7 @@ public class PromptPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testThatPromptPresenterPassesReceivedEventsToExtraEventListeners() {
+    public void testThatPromptPresenterPassesReceivedEventsToExtraEventListeners() throws RemoteException {
         // Arrange
         final IEventListener extraMockEventListener = mock(IEventListener.class);
         promptPresenter.addPromptEventListener(extraMockEventListener);

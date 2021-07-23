@@ -3,9 +3,6 @@ v
 Famplify/src/main/java/com/github/stkent/amplify/tracking/Settings.java,d\8\d8263645c4d987c06d5d48a4a1736bf32498a30a
 L
 amplify/src/main/config.json,b\4\b42064d8875ee0020b88c9d010802031fdfc4d16
-:
-
-.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
 J
@@ -20,10 +17,6 @@ B
 Xamplify/src/main/java/com/github/stkent/amplify/feedback/BaseEmailFeedbackCollector.java,3\a\3a9427e69b811ebd4d96a6a0eb6035fbe0e94d24
 è
 _amplify/src/main/java/com/github/stkent/amplify/feedback/HuaweiAppGalleryFeedbackCollector.java,e\b\eb8518b9f7927e92c0c2bb31b046741e9a4be9db
-z
-Jamplify/src/main/java/com/github/stkent/amplify/prompt/BasePromptView.java,9\e\9e0b320046f5db8a565b76a581b793eb7c5d603f
-Ç
-Ramplify/src/main/java/com/github/stkent/amplify/prompt/CustomLayoutPromptView.java,e\8\e8a9bf7672d4bc082b23001a3278f141bc063cef
 à
 Xamplify/src/main/java/com/github/stkent/amplify/prompt/CustomLayoutPromptViewConfig.java,7\8\780c2600adf73113616489ebea36b075ec422ad0
 Ñ
@@ -42,21 +35,3 @@ r
 Bamplify/src/main/java/com/github/stkent/amplify/prompt/Thanks.java,3\2\32895da1862f921159383d391362ab734baa34b7
 h
 8amplify/src/main/java/com/github/stkent/amplify/App.java,9\7\97b80ee28d5825022836d9d9cedf055a8307ac75
-Ä
-Pamplify/src/main/java/com/github/stkent/amplify/prompt/BasePromptViewConfig.java,a\a\aa6d1f1bcde41d239aa7b4edd913ed5528e18a3a
-É
-Samplify/src/main/java/com/github/stkent/amplify/prompt/DefaultLayoutPromptView.java,9\e\9e96be065dc0f6d84c05c2f908f9ebd9fd344549
-â
-Yamplify/src/main/java/com/github/stkent/amplify/prompt/DefaultLayoutPromptViewConfig.java,7\e\7eae61545a33558e5dea8458bd0f4a76d34982ec
-}
-Mamplify/src/main/java/com/github/stkent/amplify/prompt/BasePromptBuilder.java,9\7\978912ff99b5c52bcca6029527b1e78cf30232e8
-y
-Ientry/src/main/java/com/github/stkent/testapp/slice/MainAbilitySlice.java,4\2\427851a134ecf5676fd5ac94083718135eb8fedf
-;
-gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
-7
-gradlew,5\b\5bbfa66edb4db3c7c33c5181f43510990d3307f9
-A
-gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
-<
-build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35

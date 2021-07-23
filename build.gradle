@@ -55,7 +55,7 @@ checkstyle {
 sonarqube {
     properties {
         property "sonar.projectKey", "amplify"
-        property "sonar.host.url", "http://localhost:9000/"
+        property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization", "applibgroup"
         property "sonar.sources", "entry,amplify"
         property "sonar.java.binaries", "entry/build,amplify/build"

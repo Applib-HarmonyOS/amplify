@@ -1,4 +1,7 @@
-# Amplify Library
+[![Build](https://github.com/applibgroup/amplify/actions/workflows/main.yml/badge.svg)](https://github.com/applibgroup/amplify/actions/workflows/main.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=applibgroup_amplify&metric=alert_status)](https://sonarcloud.io/dashboard?id=applibgroup_amplify)
+
+# Amplify
 Amplify library for Harmony OS source code
 Amplify library is used to prompt users for feedback at the right times. Based on ruled defined by us library determines the right time to ask for feedback and based on their reaction, users are given choice to leave a quick rating/review on the Huawei App gallery 
 
@@ -84,7 +87,8 @@ and those with critical feedback are given choice to send a complaint email that
 ## Future Work
 1. Opening email client when user gives critical feedback with subject & device information in the text already filled, currently opening app gallery for both positive and critical feedback
 
-## Licence
+## License
+
 Copyright 2015 Stuart Kent
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,6 +102,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
 
 
 

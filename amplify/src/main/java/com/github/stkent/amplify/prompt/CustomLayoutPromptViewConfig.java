@@ -52,18 +52,10 @@ public final class CustomLayoutPromptViewConfig implements Sequenceable {
      * @param attrSet attribute set.
      */
     public CustomLayoutPromptViewConfig(@NotNull final AttrSet attrSet) {
-        System.out.println("CHIRAG : CustomLayoutPromptViewConfig");
-        System.out.println("CHIRAG : CustomLayoutPromptView attr length " + attrSet.getLength());
         this.questionLayout =
                 suppliedLayoutOrNull(attrSet, "prompt_view_question_layout");
         this.thanksLayout =
                 suppliedLayoutOrNull(attrSet, "prompt_view_thanks_layout");
-        if(this.questionLayout == null){
-            System.out.println("CHIRAG : CustomLayoutPromptViewConfig question null");
-        }
-        if(this.thanksLayout == null){
-            System.out.println("CHIRAG : CustomLayoutPromptViewConfig thanks null");
-        }
     }
 
     /**

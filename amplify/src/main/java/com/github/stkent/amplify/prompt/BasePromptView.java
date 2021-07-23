@@ -42,12 +42,6 @@ import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserO
 abstract class BasePromptView<T extends Component & IQuestionView, U extends Component & IThanksView>
         extends StackLayout implements IPromptView {
 
-    protected static final String SUPER_STATE_KEY = "SUPER_STATE_KEY";
-    private static final String THANKS_DISPLAY_TIME_EXPIRED_KEY = "THANKS_DISPLAY_TIME_EXPIRED_KEY";
-    private static final String BASE_PROMPT_VIEW_CONFIG_KEY = "BASE_PROMPT_VIEW_CONFIG_KEY";
-    private static final String PROMPT_PRESENTER_STATE_BUNDLE_KEY
-            = "PROMPT_PRESENTER_STATE_BUNDLE_KEY";
-
     protected abstract boolean isConfigured();
 
     @NotNull
@@ -96,7 +90,6 @@ abstract class BasePromptView<T extends Component & IQuestionView, U extends Com
 
     BasePromptView(final Context context, @Nullable final AttrSet attrSet, final int defStyleAttr) {
         super(context, attrSet, String.valueOf(defStyleAttr));
-        System.out.println("CHIRAG : BasePromptView constructor ");
         setLayoutConfig(new ComponentContainer.LayoutConfig(
                 ComponentContainer.LayoutConfig.MATCH_PARENT, ComponentContainer.LayoutConfig.MATCH_CONTENT));
         initializeBaseConfig(attrSet);
@@ -192,7 +185,6 @@ abstract class BasePromptView<T extends Component & IQuestionView, U extends Com
 
     private void initializeBaseConfig(@Nullable final AttrSet attrSet) {
         if (attrSet != null) {
-            System.out.println("CHIRAG : BasePromptView initializeBaseConfig");
             basePromptViewConfig = new BasePromptViewConfig(attrSet);
         }
     }

@@ -66,11 +66,6 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
     }
 
 
-    @Nullable private final Integer foregroundColor;
-    @Nullable private final Integer backgroundColor;
-    @Nullable private final Integer titleTextColor;
-    @Nullable private final Integer subtitleTextColor;
-
     @Nullable private Integer positiveButtonTextColor;
     @Nullable private Integer positiveButtonBackgroundColor;
     @Nullable private Integer positiveButtonBorderColor;
@@ -79,9 +74,16 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
     @Nullable private Integer negativeButtonBackgroundColor;
     @Nullable private Integer negativeButtonBorderColor;
 
+    @Nullable private final Integer foregroundColor;
+    @Nullable private final Integer backgroundColor;
+
     @Nullable private Integer customTextSizePx;
     @Nullable private Integer customButtonBorderWidthPx;
     @Nullable private Integer customButtonCornerRadiusPx;
+    
+    @Nullable private final Integer titleTextColor;
+    @Nullable private final Integer subtitleTextColor;
+
 
     /**
      * DefaultLayoutPromptViewConfig constructor.
@@ -153,6 +155,13 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
         this.subtitleTextColor   = Color.getIntColor(subtitleTextColor);
     }
 
+    protected void setCustomSize(@Nullable final Integer customTextSizePx,
+                                 @Nullable final Integer customButtonBorderWidthPx,
+                                 @Nullable final Integer customButtonCornerRadiusPx) {
+        this.customTextSizePx = customTextSizePx;
+        this.customButtonBorderWidthPx = customButtonBorderWidthPx;
+        this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
+    }
 
     protected void setPositiveButtonColor(@Nullable final Integer positiveButtonTextColor,
                                           @Nullable final Integer positiveButtonBackgroundColor,
@@ -168,14 +177,6 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
         this.negativeButtonTextColor       = negativeButtonTextColor;
         this.negativeButtonBackgroundColor = negativeButtonBackgroundColor;
         this.negativeButtonBorderColor     = negativeButtonBorderColor;
-    }
-
-    protected void setCustomSize(@Nullable final Integer customTextSizePx,
-                                 @Nullable final Integer customButtonBorderWidthPx,
-                                 @Nullable final Integer customButtonCornerRadiusPx) {
-        this.customTextSizePx = customTextSizePx;
-        this.customButtonBorderWidthPx = customButtonBorderWidthPx;
-        this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
     }
 
 
@@ -197,21 +198,7 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
         return defaultIfNull(positiveButtonTextColor, getBackgroundColor());
     }
 
-    public int getPositiveButtonBackgroundColor() {
-        return defaultIfNull(positiveButtonBackgroundColor, getForegroundColor());
-    }
 
-    public int getPositiveButtonBorderColor() {
-        return defaultIfNull(positiveButtonBorderColor, getForegroundColor());
-    }
-
-    public int getNegativeButtonTextColor() {
-        return defaultIfNull(negativeButtonTextColor, getBackgroundColor());
-    }
-
-    public int getNegativeButtonBackgroundColor() {
-        return defaultIfNull(negativeButtonBackgroundColor, getForegroundColor());
-    }
 
     public int getNegativeButtonBorderColor() {
         return defaultIfNull(negativeButtonBorderColor, getForegroundColor());
@@ -232,6 +219,14 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
         return customButtonCornerRadiusPx;
     }
 
+    public int getNegativeButtonTextColor() {
+        return defaultIfNull(negativeButtonTextColor, getBackgroundColor());
+    }
+
+    public int getNegativeButtonBackgroundColor() {
+        return defaultIfNull(negativeButtonBackgroundColor, getForegroundColor());
+    }
+
     private int getForegroundColor() {
         return defaultIfNull(foregroundColor, DEFAULT_FOREGROUND_COLOR.getValue());
     }
@@ -239,6 +234,15 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
     private int getBackgroundColor() {
         return defaultIfNull(backgroundColor, DEFAULT_BACKGROUND_COLOR.getValue());
     }
+
+    public int getPositiveButtonBackgroundColor() {
+        return defaultIfNull(positiveButtonBackgroundColor, getForegroundColor());
+    }
+
+    public int getPositiveButtonBorderColor() {
+        return defaultIfNull(positiveButtonBorderColor, getForegroundColor());
+    }
+
 
     @Override
     public boolean marshalling(Parcel parcel) {
@@ -278,16 +282,6 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
             return this;
         }
 
-        public Builder setTitleTextColor(final int titleTextColor) {
-            this.titleTextColor = titleTextColor;
-            return this;
-        }
-
-        public Builder setSubtitleTextColor(final int subtitleTextColor) {
-            this.subtitleTextColor = subtitleTextColor;
-            return this;
-        }
-
         public Builder setPositiveButtonTextColor(final int positiveButtonTextColor) {
             this.positiveButtonTextColor = positiveButtonTextColor;
             return this;
@@ -305,6 +299,11 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
 
         public Builder setNegativeButtonTextColor(final int negativeButtonTextColor) {
             this.negativeButtonTextColor = negativeButtonTextColor;
+            return this;
+        }
+
+        public Builder setButtonCornerRadiusPx(final int customButtonCornerRadiusPx) {
+            this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
             return this;
         }
 
@@ -328,10 +327,17 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
             return this;
         }
 
-        public Builder setButtonCornerRadiusPx(final int customButtonCornerRadiusPx) {
-            this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
+        public Builder setTitleTextColor(final int titleTextColor) {
+            this.titleTextColor = titleTextColor;
             return this;
         }
+
+        public Builder setSubtitleTextColor(final int subtitleTextColor) {
+            this.subtitleTextColor = subtitleTextColor;
+            return this;
+        }
+
+
 
         /**
          * DefaultLayoutPromptViewConfig build.
@@ -358,6 +364,7 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
                     negativeButtonTextColor,
                     negativeButtonBackgroundColor,
                     negativeButtonBorderColor);
+
 
             return defaultLayoutPromptViewConfig;
         }

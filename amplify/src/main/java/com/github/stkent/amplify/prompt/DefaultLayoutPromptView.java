@@ -32,8 +32,6 @@ public final class DefaultLayoutPromptView
         extends BasePromptView<DefaultLayoutQuestionView, DefaultLayoutThanksView>
         implements IPromptView {
 
-    private static final String DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY = "DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
-
     private DefaultLayoutPromptViewConfig config;
 
     public DefaultLayoutPromptView(final Context context) {
@@ -60,7 +58,6 @@ public final class DefaultLayoutPromptView
 
         super(context, attributeSet, defStyleAttr);
         init(attributeSet);
-        System.out.println("CHIRAG : defaultlayoutpromptview : attr " + attributeSet.getLength());
     }
 
     /**

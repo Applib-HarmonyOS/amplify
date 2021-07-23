@@ -31,9 +31,6 @@ public final class CustomLayoutPromptView
         extends BasePromptView<CustomLayoutQuestionView, CustomLayoutThanksView>
         implements IPromptView {
 
-    private static final String CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY = "CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
-
-
     private CustomLayoutPromptViewConfig config;
 
     /**
@@ -53,8 +50,6 @@ public final class CustomLayoutPromptView
      */
     public CustomLayoutPromptView(final Context context, @Nullable final AttrSet attrSet) {
         this(context, attrSet, 0);
-        System.out.println("CHIRAG : CustomLayoutPromptView constructor context and attrSet)");
-        System.out.println("CHIRAG : CustomLayoutPromptView attr length " + attrSet.getLength());
     }
 
     /**
@@ -72,8 +67,6 @@ public final class CustomLayoutPromptView
 
         super(context, attributeSet, defStyleAttr);
         init(attributeSet);
-        System.out.println("CHIRAG : CustomLayoutPromptView constructor context and attrSet 2");
-        System.out.println("CHIRAG : CustomLayoutPromptView attr length " + attributeSet.getLength());
     }
 
     /**
@@ -117,13 +110,8 @@ public final class CustomLayoutPromptView
      * that method for confirmation.
      */
     private void init(@Nullable final AttrSet attrSet) {
-        System.out.println("CHIRAG :  CustomLayoutPromptView attr length : " + attrSet.getLength());
-        for(int j = 0; j < attrSet.getLength(); ++j){
-            System.out.println("CHIRAG attr : " + attrSet.getAttr(j).toString());
-        }
-        if (attrSet != null) {
-            config = new CustomLayoutPromptViewConfig(attrSet);
-        }
+        config = new CustomLayoutPromptViewConfig(attrSet);
+
     }
 
 }

@@ -20,25 +20,26 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * public class BasePromptBuilder
+ * public class BasePromptBuilder.
  */
 public class BasePromptBuilder {
-    @Nullable
-    private String userOpinionQuestionTitle;
+    @Nullable private String userOpinionQuestionTitle;
+    @Nullable private String thanksTitle;
+    @Nullable private String thanksSubtitle;
+    @Nullable private Long thanksDisplayTimeMs;
     @Nullable private String userOpinionQuestionSubtitle;
     @Nullable private String userOpinionQuestionPositiveButtonLabel;
     @Nullable private String userOpinionQuestionNegativeButtonLabel;
-    @Nullable private String positiveFeedbackQuestionTitle;
-    @Nullable private String positiveFeedbackQuestionSubtitle;
-    @Nullable private String positiveFeedbackQuestionPositiveButtonLabel;
-    @Nullable private String positiveFeedbackQuestionNegativeButtonLabel;
     @Nullable private String criticalFeedbackQuestionTitle;
     @Nullable private String criticalFeedbackQuestionSubtitle;
     @Nullable private String criticalFeedbackQuestionPositiveButtonLabel;
     @Nullable private String criticalFeedbackQuestionNegativeButtonLabel;
-    @Nullable private String thanksTitle;
-    @Nullable private String thanksSubtitle;
-    @Nullable private Long thanksDisplayTimeMs;
+    @Nullable private String positiveFeedbackQuestionTitle;
+    @Nullable private String positiveFeedbackQuestionSubtitle;
+    @Nullable private String positiveFeedbackQuestionPositiveButtonLabel;
+    @Nullable private String positiveFeedbackQuestionNegativeButtonLabel;
+
+
 
     /**
      * setUserOpinionQuestionTitle BasePromptBuilder class.

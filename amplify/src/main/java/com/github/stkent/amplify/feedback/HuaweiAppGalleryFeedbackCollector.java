@@ -59,7 +59,7 @@ public final class HuaweiAppGalleryFeedbackCollector implements IFeedbackCollect
         try {
             startHuaweiAppGallery(currentAbility, packageName);
             return true;
-        } catch ( final IllegalArgumentException | IllegalStateException illegalException) {
+        } catch (final IllegalArgumentException | IllegalStateException illegalException) {
             try {
                 launchMarketUrl(currentAbility);
                 return true;

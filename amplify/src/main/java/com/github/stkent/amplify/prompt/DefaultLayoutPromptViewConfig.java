@@ -261,13 +261,13 @@ public final class DefaultLayoutPromptViewConfig implements Sequenceable {
         @Nullable private Integer foregroundColor;
         @Nullable private Integer backgroundColor;
         @Nullable private Integer titleTextColor;
-        @Nullable private Integer subtitleTextColor;
         @Nullable private Integer positiveButtonTextColor;
-        @Nullable private Integer positiveButtonBackgroundColor;
-        @Nullable private Integer positiveButtonBorderColor;
+        @Nullable private Integer subtitleTextColor;
         @Nullable private Integer negativeButtonTextColor;
-        @Nullable private Integer negativeButtonBackgroundColor;
+        @Nullable private Integer positiveButtonBackgroundColor;
         @Nullable private Integer negativeButtonBorderColor;
+        @Nullable private Integer positiveButtonBorderColor;
+        @Nullable private Integer negativeButtonBackgroundColor;
         @Nullable private Integer customTextSizePx;
         @Nullable private Integer customButtonBorderWidthPx;
         @Nullable private Integer customButtonCornerRadiusPx;

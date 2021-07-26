@@ -48,6 +48,7 @@ class CustomLayoutQuestionView extends StackLayout implements IQuestionView {
     @NotNull
     private final Component negativeButton;
 
+    @Nullable
     private IQuestionPresenter questionPresenter;
 
     CustomLayoutQuestionView(final Context context, final int layoutRes) {

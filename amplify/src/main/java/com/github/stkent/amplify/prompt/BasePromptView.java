@@ -165,7 +165,7 @@ abstract class BasePromptView<T extends Component & IQuestionView, U extends Com
             if (thanksDisplayTimeMs != null) {
                 new EventHandler(EventRunner.getMainEventRunner()).postTask(() -> {
                     thanksDisplayTimeExpired = true;
-                    final int fadeDurationMs = 7000;
+                    final int fadeDurationMs = 3000;
                     thanksView.createAnimatorProperty()
                             .setDuration(fadeDurationMs)
                             .alpha(0.0f)

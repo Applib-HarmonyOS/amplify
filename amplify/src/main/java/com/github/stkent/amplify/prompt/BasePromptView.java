@@ -17,11 +17,14 @@
 
 package com.github.stkent.amplify.prompt;
 
+import ohos.agp.animation.Animator;
 import ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
 import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.StackLayout;
 import ohos.app.Context;
+import ohos.eventhandler.EventHandler;
+import ohos.eventhandler.EventRunner;
 import ohos.rpc.RemoteException;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
@@ -147,6 +150,67 @@ abstract class BasePromptView<T extends Component & IQuestionView, U extends Com
             if (thanksDisplayTimeMs == null) {
                 hide();
             }
+        }
+
+
+        if (!thanksDisplayTimeExpired) {
+            final U thanksView = getThanksView();
+            thanksView.bind(basePromptViewConfig.getThanks());
+
+            setDisplayedView(thanksView);
+
+            final Long thanksDisplayTimeMs = basePromptViewConfig.getThanksDisplayTimeMs();
+
+
+            if (thanksDisplayTimeMs != null) {
+                new EventHandler(EventRunner.getMainEventRunner()).postTask(() -> {
+                    thanksDisplayTimeExpired = true;
+                    final int fadeDurationMs = 3000;
+                    thanksView.createAnimatorProperty()
+                            .setDuration(fadeDurationMs)
+                            .alpha(0.0f)
+                            .setStateChangedListener(new Animator.StateChangedListener() {
+                                @Override
+                                public void onStart(Animator animator) {
+                                    //Method intentionally left blank
+                                }
+
+                                @Override
+                                public void onStop(Animator animator) {
+                                    //Method intentionally left blank
+                                }
+
+                                @Override
+                                public void onCancel(Animator animator) {
+                                    //Method intentionally left blank
+                                }
+
+                                @Override
+                                public void onEnd(Animator animator) {
+                                    hide();
+                                    try {
+                                        promptPresenter.notifyEventTriggered(
+                                                PromptViewEvent.PROMPT_DISMISSED);
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onPause(Animator animator) {
+                                    //Method intentionally left blank
+                                }
+
+                                @Override
+                                public void onResume(Animator animator) {
+                                    //Method intentionally left blank
+                                }
+                            })
+                            .start();
+                }, thanksDisplayTimeMs);
+            }
+        } else {
+            hide();
         }
 
     }

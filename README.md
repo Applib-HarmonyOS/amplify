@@ -2,8 +2,8 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=applibgroup_amplify&metric=alert_status)](https://sonarcloud.io/dashboard?id=applibgroup_amplify)
 
 # Amplify
-Amplify library for Harmony OS source code
-Amplify library is used to prompt users for feedback at the right times. Based on ruled defined by us library determines the right time to ask for feedback and based on their reaction, users are given choice to leave a quick rating/review on the Huawei App gallery 
+
+Amplify is used to prompt users for feedback at the right times. Based on ruled defined by us library determines the right time to ask for feedback and based on their reaction, users are given choice to leave a quick rating/review on the Huawei App gallery 
 
 
 ![image](https://user-images.githubusercontent.com/48115293/126625787-5f1625da-414e-46d7-91b3-62b0ea72a931.png)
@@ -80,15 +80,14 @@ d) Custom promptview layout with code config
   
   ![custom_thanks_xml](https://user-images.githubusercontent.com/48115293/126280882-1dd7b22d-dbcb-4f40-9089-f5e68fa638c1.png)
 
-## Limitations
-1. currently the feature to open email client from the app is not there, so for time being they are also given choice to review on App gallery
-and those with critical feedback are given choice to send a complaint email that will automatically include pertinent app and device information
-2. Option for adding border for buttons is not there, can include border width and border color attribute
+
 ## Future Work
 1. Opening email client when user gives critical feedback with subject & device information in the text already filled, currently opening app gallery for both positive and critical feedback
+2. Adding custom attributes for CustomlayoutPromptView
+3. Button customizations by providing different border width and color attributes
 
 ## License
-
+```
 Copyright 2015 Stuart Kent
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -102,7 +101,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
+```
 
 
 

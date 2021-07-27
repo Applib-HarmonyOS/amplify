@@ -208,7 +208,15 @@ public final class BasePromptViewConfig implements Sequenceable {
         } else {
             thanksSubtitle = "";
         }
-        thanksDisplayTimeMs = suppliedLongOrNull(attrSet, "prompt_view_thanks_display_time_ms");
+
+        optionalAttr = attrSet.getAttr("prompt_view_thanks_display_time_ms");
+        if (optionalAttr.isPresent()) {
+            thanksDisplayTimeMs = optionalAttr.get().getLongValue();
+        } else {
+            thanksDisplayTimeMs = (long) 2000;
+        }
+
+        //thanksDisplayTimeMs = suppliedLongOrNull(attrSet, "prompt_view_thanks_display_time_ms");
     }
 
     protected void setPositiveFeedback(

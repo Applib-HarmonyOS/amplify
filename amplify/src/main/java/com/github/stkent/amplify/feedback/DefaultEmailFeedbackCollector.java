@@ -41,7 +41,7 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
             @NotNull final IEnvironment environment,
             @NotNull final IDevice device) {
 
-        return app.getName() + " Android App Feedback";
+        return app.getName() + " Harmony App Feedback";
     }
 
     @NotNull

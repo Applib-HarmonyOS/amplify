@@ -9,7 +9,7 @@ Amplify is used to prompt users for feedback at the right times. Based on ruled 
 ![image](https://user-images.githubusercontent.com/48115293/126625787-5f1625da-414e-46d7-91b3-62b0ea72a931.png)
 
 
-# Source
+## Source
 Inspired from android library https://github.com/stkent/amplify
 
 ## Features
@@ -28,6 +28,29 @@ If we get critical feedback
 
 ![image](https://user-images.githubusercontent.com/48115293/126626380-e8e5cb2a-28d5-4fab-8562-341aa5610c99.png)
 
+## Dependency
+1. For using Amplify module in sample app, include the source code and add the below dependencies in entry/build.gradle to generate hap/support.har.
+```
+	dependencies {
+		implementation project(':amplify')
+        	testCompile 'junit:junit:4.12'
+	}
+```
+2. For using Amplify module in separate application using har file, add the har file in the entry/libs folder and add the dependencies in entry/build.gradle file.
+```
+	dependencies {
+		implementation fileTree(dir: 'libs', include: ['*.har'])
+		testCompile 'junit:junit:4.12'
+	}
+
+```
+3. For using Amplify from a remote repository in separate application, add the below dependencies in entry/build.gradle file.
+```
+	dependencies {
+		implementation 'dev.applibgroup:amplify:1.0.0'
+        	testCompile 'junit:junit:4.12'
+	}
+```
 
 
 
